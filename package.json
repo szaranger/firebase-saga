@@ -1,6 +1,6 @@
 {
-  "name": "firebase-redux",
-  "version": "1.0.1",
+  "name": "firebase-saga",
+  "version": "1.0.2",
   "description": "A library for connecting Redux saga middleware to Firebase.",
   "main": "index.js",
   "scripts": {
