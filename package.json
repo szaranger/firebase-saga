@@ -1,0 +1,28 @@
+{
+  "name": "firebase-redux",
+  "version": "1.0.0",
+  "description": "A library for connecting Redux saga middleware to Firebase.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/szaranger/firebase-saga.git"
+  },
+  "keywords": [
+    "Firebase",
+    "saga",
+    "Redux",
+    "React"
+  ],
+  "author": "Sean Amarasinghe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/szaranger/firebase-saga/issues"
+  },
+  "homepage": "https://github.com/szaranger/firebase-saga#readme",
+  "dependencies": {
+    "redux-saga": "^0.11.0"
+  }
+}
