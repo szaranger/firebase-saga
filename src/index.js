@@ -1,5 +1,4 @@
-import { eventChannel } from 'redux-saga';
-import { put, fork, call, take } from 'redux-saga/effects';
+import { put, fork, call, take, eventChannel } from 'redux-saga';
 
 function newOps(name = 'data') {
 	const ops = {};
@@ -21,6 +20,7 @@ export function* get(path, key) {
 	const ops = newOps('error');
 	const ref = firebase.database().ref(`${path}/${key}`);
 	const data = yield call([ref, ref.once], 'value');
+  
 	return data.val();
 }
 
