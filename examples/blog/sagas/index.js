@@ -12,5 +12,5 @@ function* fetchPosts() {
 }
 
 function* get() {
-  yield* takeEvery(fetchPosts);
+  yield* takeEvery(actions.FETCH_POSTS,  fetchPosts);
 }
