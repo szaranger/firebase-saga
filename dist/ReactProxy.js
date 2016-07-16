@@ -67,9 +67,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.update = update;
 	exports.sync = sync;
 
-	var _reduxSaga = __webpack_require__(9);
-
-	var _effects = __webpack_require__(8);
+	var _reduxSaga = __webpack_require__(8);
 
 	var _marked = [get, create, update, runSync, sync].map(regeneratorRuntime.mark);
 
@@ -102,7 +100,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						ops = newOps('error');
 						ref = firebase.database().ref(path + '/' + key);
 						_context.next = 4;
-						return (0, _effects.call)([ref, ref.once], 'value');
+						return (0, _reduxSaga.call)([ref, ref.once], 'value');
 
 					case 4:
 						data = _context.sent;
@@ -124,19 +122,19 @@ return /******/ (function(modules) { // webpackBootstrap
 				switch (_context2.prev = _context2.next) {
 					case 0:
 						_context2.next = 2;
-						return (0, _effects.call)(newKey, path);
+						return (0, _reduxSaga.call)(newKey, path);
 
 					case 2:
 						key = _context2.sent;
 						_context2.next = 5;
-						return (0, _effects.call)(fn, key);
+						return (0, _reduxSaga.call)(fn, key);
 
 					case 5:
 						payload = _context2.sent;
 						ops = newOps('error');
 						ref = firebase.database().ref();
 						_context2.next = 10;
-						return [(0, _effects.call)([ref, ref.update], payload, ops.handler), (0, _effects.take)(ops)];
+						return [(0, _reduxSaga.call)([ref, ref.update], payload, ops.handler), (0, _reduxSaga.take)(ops)];
 
 					case 10:
 						_ref = _context2.sent;
@@ -166,7 +164,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						}
 
 						_context3.next = 3;
-						return (0, _effects.call)(payload);
+						return (0, _reduxSaga.call)(payload);
 
 					case 3:
 						payload = _context3.sent;
@@ -175,7 +173,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						ops = newOps('error');
 						ref = firebase.database().ref(path + '/' + key);
 						_context3.next = 8;
-						return [(0, _effects.call)([ref, ref.update], payload, ops.handler), (0, _effects.take)(ops)];
+						return [(0, _reduxSaga.call)([ref, ref.update], payload, ops.handler), (0, _reduxSaga.take)(ops)];
 
 					case 8:
 						_ref3 = _context3.sent;
@@ -201,7 +199,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					case 0:
 						ops = newOps();
 						_context4.next = 3;
-						return (0, _effects.call)([ref, ref.on], eventType, ops.handler);
+						return (0, _reduxSaga.call)([ref, ref.on], eventType, ops.handler);
 
 					case 3:
 						if (false) {
@@ -210,13 +208,13 @@ return /******/ (function(modules) { // webpackBootstrap
 						}
 
 						_context4.next = 6;
-						return (0, _effects.take)(ops);
+						return (0, _reduxSaga.take)(ops);
 
 					case 6:
 						_ref5 = _context4.sent;
 						data = _ref5.data;
 						_context4.next = 10;
-						return (0, _effects.put)(creator({ data: data }));
+						return (0, _reduxSaga.put)(creator({ data: data }));
 
 					case 10:
 						_context4.next = 3;
@@ -262,7 +260,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						}
 
 						_context5.next = 12;
-						return (0, _effects.fork)(runSync, ref, type, action);
+						return (0, _reduxSaga.fork)(runSync, ref, type, action);
 
 					case 12:
 						_iteratorNormalCompletion = true;
@@ -1131,103 +1129,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _io = __webpack_require__(3);
-
-	Object.defineProperty(exports, 'take', {
-	  enumerable: true,
-	  get: function get() {
-	    return _io.take;
-	  }
-	});
-	Object.defineProperty(exports, 'takem', {
-	  enumerable: true,
-	  get: function get() {
-	    return _io.takem;
-	  }
-	});
-	Object.defineProperty(exports, 'put', {
-	  enumerable: true,
-	  get: function get() {
-	    return _io.put;
-	  }
-	});
-	Object.defineProperty(exports, 'race', {
-	  enumerable: true,
-	  get: function get() {
-	    return _io.race;
-	  }
-	});
-	Object.defineProperty(exports, 'call', {
-	  enumerable: true,
-	  get: function get() {
-	    return _io.call;
-	  }
-	});
-	Object.defineProperty(exports, 'apply', {
-	  enumerable: true,
-	  get: function get() {
-	    return _io.apply;
-	  }
-	});
-	Object.defineProperty(exports, 'cps', {
-	  enumerable: true,
-	  get: function get() {
-	    return _io.cps;
-	  }
-	});
-	Object.defineProperty(exports, 'fork', {
-	  enumerable: true,
-	  get: function get() {
-	    return _io.fork;
-	  }
-	});
-	Object.defineProperty(exports, 'spawn', {
-	  enumerable: true,
-	  get: function get() {
-	    return _io.spawn;
-	  }
-	});
-	Object.defineProperty(exports, 'join', {
-	  enumerable: true,
-	  get: function get() {
-	    return _io.join;
-	  }
-	});
-	Object.defineProperty(exports, 'cancel', {
-	  enumerable: true,
-	  get: function get() {
-	    return _io.cancel;
-	  }
-	});
-	Object.defineProperty(exports, 'select', {
-	  enumerable: true,
-	  get: function get() {
-	    return _io.select;
-	  }
-	});
-	Object.defineProperty(exports, 'actionChannel', {
-	  enumerable: true,
-	  get: function get() {
-	    return _io.actionChannel;
-	  }
-	});
-	Object.defineProperty(exports, 'cancelled', {
-	  enumerable: true,
-	  get: function get() {
-	    return _io.cancelled;
-	  }
-	});
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
@@ -1238,7 +1139,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utils = __webpack_require__(1);
 
-	var _asap = __webpack_require__(10);
+	var _asap = __webpack_require__(9);
 
 	var _asap2 = _interopRequireDefault(_asap);
 
@@ -1932,13 +1833,104 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(6)
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _io = __webpack_require__(3);
+
+	Object.defineProperty(exports, 'take', {
+	  enumerable: true,
+	  get: function get() {
+	    return _io.take;
+	  }
+	});
+	Object.defineProperty(exports, 'takem', {
+	  enumerable: true,
+	  get: function get() {
+	    return _io.takem;
+	  }
+	});
+	Object.defineProperty(exports, 'put', {
+	  enumerable: true,
+	  get: function get() {
+	    return _io.put;
+	  }
+	});
+	Object.defineProperty(exports, 'race', {
+	  enumerable: true,
+	  get: function get() {
+	    return _io.race;
+	  }
+	});
+	Object.defineProperty(exports, 'call', {
+	  enumerable: true,
+	  get: function get() {
+	    return _io.call;
+	  }
+	});
+	Object.defineProperty(exports, 'apply', {
+	  enumerable: true,
+	  get: function get() {
+	    return _io.apply;
+	  }
+	});
+	Object.defineProperty(exports, 'cps', {
+	  enumerable: true,
+	  get: function get() {
+	    return _io.cps;
+	  }
+	});
+	Object.defineProperty(exports, 'fork', {
+	  enumerable: true,
+	  get: function get() {
+	    return _io.fork;
+	  }
+	});
+	Object.defineProperty(exports, 'spawn', {
+	  enumerable: true,
+	  get: function get() {
+	    return _io.spawn;
+	  }
+	});
+	Object.defineProperty(exports, 'join', {
+	  enumerable: true,
+	  get: function get() {
+	    return _io.join;
+	  }
+	});
+	Object.defineProperty(exports, 'cancel', {
+	  enumerable: true,
+	  get: function get() {
+	    return _io.cancel;
+	  }
+	});
+	Object.defineProperty(exports, 'select', {
+	  enumerable: true,
+	  get: function get() {
+	    return _io.select;
+	  }
+	});
+	Object.defineProperty(exports, 'actionChannel', {
+	  enumerable: true,
+	  get: function get() {
+	    return _io.actionChannel;
+	  }
+	});
+	Object.defineProperty(exports, 'cancelled', {
+	  enumerable: true,
+	  get: function get() {
+	    return _io.cancelled;
+	  }
+	});
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1948,7 +1940,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.utils = exports.effects = exports.CANCEL = exports.delay = exports.takeLatest = exports.takeEvery = exports.buffers = exports.channel = exports.eventChannel = exports.END = exports.runSaga = undefined;
 
-	var _runSaga = __webpack_require__(12);
+	var _runSaga = __webpack_require__(11);
 
 	Object.defineProperty(exports, 'runSaga', {
 	  enumerable: true,
@@ -1987,7 +1979,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 
-	var _sagaHelpers = __webpack_require__(13);
+	var _sagaHelpers = __webpack_require__(12);
 
 	Object.defineProperty(exports, 'takeEvery', {
 	  enumerable: true,
@@ -2017,15 +2009,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 
-	var _middleware = __webpack_require__(11);
+	var _middleware = __webpack_require__(10);
 
 	var _middleware2 = _interopRequireDefault(_middleware);
 
-	var _effects = __webpack_require__(6);
+	var _effects = __webpack_require__(7);
 
 	var effects = _interopRequireWildcard(_effects);
 
-	var _utils2 = __webpack_require__(14);
+	var _utils2 = __webpack_require__(13);
 
 	var utils = _interopRequireWildcard(_utils2);
 
@@ -2038,7 +2030,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.utils = utils;
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2072,7 +2064,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -2084,7 +2076,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utils = __webpack_require__(1);
 
-	var _proc = __webpack_require__(7);
+	var _proc = __webpack_require__(6);
 
 	var _proc2 = _interopRequireDefault(_proc);
 
@@ -2148,7 +2140,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2160,7 +2152,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utils = __webpack_require__(1);
 
-	var _proc = __webpack_require__(7);
+	var _proc = __webpack_require__(6);
 
 	var _proc2 = _interopRequireDefault(_proc);
 
@@ -2180,7 +2172,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2310,7 +2302,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

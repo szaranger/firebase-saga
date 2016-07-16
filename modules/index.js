@@ -13,8 +13,6 @@ exports.sync = sync;
 
 var _reduxSaga = require('redux-saga');
 
-var _effects = require('redux-saga/effects');
-
 var _marked = [get, create, update, runSync, sync].map(regeneratorRuntime.mark);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -46,7 +44,7 @@ function get(path, key) {
 					ops = newOps('error');
 					ref = firebase.database().ref(path + '/' + key);
 					_context.next = 4;
-					return (0, _effects.call)([ref, ref.once], 'value');
+					return (0, _reduxSaga.call)([ref, ref.once], 'value');
 
 				case 4:
 					data = _context.sent;
@@ -68,19 +66,19 @@ function create(path, fn) {
 			switch (_context2.prev = _context2.next) {
 				case 0:
 					_context2.next = 2;
-					return (0, _effects.call)(newKey, path);
+					return (0, _reduxSaga.call)(newKey, path);
 
 				case 2:
 					key = _context2.sent;
 					_context2.next = 5;
-					return (0, _effects.call)(fn, key);
+					return (0, _reduxSaga.call)(fn, key);
 
 				case 5:
 					payload = _context2.sent;
 					ops = newOps('error');
 					ref = firebase.database().ref();
 					_context2.next = 10;
-					return [(0, _effects.call)([ref, ref.update], payload, ops.handler), (0, _effects.take)(ops)];
+					return [(0, _reduxSaga.call)([ref, ref.update], payload, ops.handler), (0, _reduxSaga.take)(ops)];
 
 				case 10:
 					_ref = _context2.sent;
@@ -110,7 +108,7 @@ function update(path, key, payload) {
 					}
 
 					_context3.next = 3;
-					return (0, _effects.call)(payload);
+					return (0, _reduxSaga.call)(payload);
 
 				case 3:
 					payload = _context3.sent;
@@ -119,7 +117,7 @@ function update(path, key, payload) {
 					ops = newOps('error');
 					ref = firebase.database().ref(path + '/' + key);
 					_context3.next = 8;
-					return [(0, _effects.call)([ref, ref.update], payload, ops.handler), (0, _effects.take)(ops)];
+					return [(0, _reduxSaga.call)([ref, ref.update], payload, ops.handler), (0, _reduxSaga.take)(ops)];
 
 				case 8:
 					_ref3 = _context3.sent;
@@ -145,7 +143,7 @@ function runSync(ref, eventType, creator) {
 				case 0:
 					ops = newOps();
 					_context4.next = 3;
-					return (0, _effects.call)([ref, ref.on], eventType, ops.handler);
+					return (0, _reduxSaga.call)([ref, ref.on], eventType, ops.handler);
 
 				case 3:
 					if (!true) {
@@ -154,13 +152,13 @@ function runSync(ref, eventType, creator) {
 					}
 
 					_context4.next = 6;
-					return (0, _effects.take)(ops);
+					return (0, _reduxSaga.take)(ops);
 
 				case 6:
 					_ref5 = _context4.sent;
 					data = _ref5.data;
 					_context4.next = 10;
-					return (0, _effects.put)(creator({ data: data }));
+					return (0, _reduxSaga.put)(creator({ data: data }));
 
 				case 10:
 					_context4.next = 3;
@@ -206,7 +204,7 @@ function sync(path) {
 					}
 
 					_context5.next = 12;
-					return (0, _effects.fork)(runSync, ref, type, action);
+					return (0, _reduxSaga.fork)(runSync, ref, type, action);
 
 				case 12:
 					_iteratorNormalCompletion = true;
