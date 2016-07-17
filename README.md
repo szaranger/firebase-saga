@@ -35,7 +35,7 @@ function* get() {
 
 ### Add Firebase to your web app
 
-In your `index.html` file add the **Firebase** config:
+If you are using CDN only, add the URL to the `index.html` file, and specify the **Firebase** config:
 
 ```
 <!doctype html>
@@ -45,7 +45,8 @@ In your `index.html` file add the **Firebase** config:
 	</head>
 	<body>
 		<main id="root"></main>
-    <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js">
+    </script>
 		<script>
 			// Initialize Firebase
 			var config = {
@@ -59,4 +60,33 @@ In your `index.html` file add the **Firebase** config:
 		<script src="/static/bundle.js"></script>
 	</body>
 </html>
+```
+
+If you are using **Webpack** or **Browserify**, you can install the **firebase** node module and then import it into the root components. 
+
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import firebase from 'firebase/app';
+import Root from './containers/Root'
+import rootSaga from './sagas';
+
+import configureStore from './store/configureStore';
+
+const store = configureStore();
+
+firebase.initializeApp({
+  apiKey: '<YOUR API KEY>',
+  authDomain: '<YOUR APP NAME>.firebaseapp.com',
+  databaseURL: 'https://<YOUR APP NAME>.firebaseio.com',
+  storageBucket: '<YOUR APP NAME>.appspot.com'
+});
+
+ReactDOM.render(
+	<Provider store={store}>
+		<Root />
+	</Provider>,
+	document.getElementById('root')
+);
 ```
