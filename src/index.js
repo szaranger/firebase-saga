@@ -1,15 +1,18 @@
-import { put, fork, call, take, eventChannel } from 'redux-saga';
+import { eventChannel } from 'redux-saga';
+import { put, fork, call, take } from 'redux-saga/effects';
 
-function newOps(name = 'data') {
-	const ops = {};
+const EVENT_TYPES = ['child_added', 'child_removed'];
+
+function newOpts(name = 'data') {
+	const opts = {};
 	const chan = eventChannel(emit => {
-		ops.handler = obj => {
+		opts.handler = obj => {
 			emit({ [name]: obj });
 		};
 		return () => {};
 	});
-	chan.handler = ops.handler;
-	return ch;
+	chan.handler = opts.handler;
+	return chan;
 }
 
 function newKey(path) {
@@ -17,21 +20,27 @@ function newKey(path) {
 }
 
 export function* get(path, key) {
-	const ops = newOps('error');
 	const ref = firebase.database().ref(`${path}/${key}`);
 	const data = yield call([ref, ref.once], 'value');
-  
+
+	return data.val();
+}
+
+export function* getAll(path) {
+	const ref = firebase.database().ref(path);
+	const data = yield call([ref, ref.once], 'value');
+
 	return data.val();
 }
 
 export function* create(path, fn) {
 	const key = yield call(newKey, path);
 	const payload = yield call(fn, key);
-	const ops = newOps('error');
+	const opts = newOpts('error');
 	const ref = firebase.database().ref();
 	const [ _, { error } ] = yield [
-		call([ref, ref.update], payload, ops.handler),
-		take(ops)
+		call([ref, ref.update], payload, opts.handler),
+		take(opts)
 	];
 	return error;
 }
@@ -40,28 +49,28 @@ export function* update(path, key, payload) {
 	if (typeof payload === 'function') {
 		payload = yield call(payload);
 	}
-	const ops = newOps('error');
+	const opts = newOpts('error');
 	const ref = firebase.database().ref(`${path}/${key}`);
 	const [ _, { error } ] = yield [
-		call([ref, ref.update], payload, ops.handler),
-		take(ops)
+		call([ref, ref.update], payload, opts.handler),
+		take(opts)
 	];
 	return error;
 }
 
 function* runSync(ref, eventType, creator) {
-	const ops = newOps();
-	yield call([ref, ref.on], eventType, ops.handler);
+	const opts = newOpts();
+	yield call([ref, ref.on], eventType, opts.handler);
 
 	while (true) {
-		const { data } = yield take(ops);
+		const { data } = yield take(opts);
 		yield put(creator({ data }));
 	}
 }
 
-const EVENT_TYPES = ['child_added', 'child_removed'];
-export function* sync(path, mapEventToAction = {}) {
-	const ref = firebase.database().ref(path).limitToLast(20);
+export function* sync(path, mapEventToAction = {}, limit = 20) {
+	const ref = firebase.database().ref(path).limitToLast(limit);
+
 	for (let type of EVENT_TYPES) {
 		const action = mapEventToAction[type];
 		if (typeof action === 'function') {
