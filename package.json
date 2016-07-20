@@ -1,8 +1,8 @@
 {
   "name": "firebase-saga",
-  "version": "1.0.12",
+  "version": "1",
   "description": "A library for connecting Redux saga middleware to Firebase.",
-  "main": "src/index.js",
+  "main": "dist/ReactProxy.js",
   "scripts": {
     "build": "rimraf modules dist && NODE_ENV=babel-es2015 webpack && NODE_ENV=babel-es2015 babel src --out-dir modules",
     "test": "npm run test:babel-es2015 && npm run test:native-es2015",
