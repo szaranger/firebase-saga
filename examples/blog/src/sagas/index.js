@@ -1,17 +1,18 @@
 import { takeEvery } from 'redux-saga';
 import { call, put } from 'redux-saga/effects';
 import * as actions from '../actions';
-import * as firebaseRef from 'firebase-saga';
+import { getAll } from 'firebase-saga';
 
 function* fetchPosts() {
-  const posts = yield call(firebaseRef.get, 'posts');
-  if (posts) {
-    yield put(actions.receivePosts(posts);
-  } else {
-    yield put(actions.requestGetPostsFailed());
+  try {
+    const posts = yield call(getAll);
+    yield put(actions.postReceived(posts));
+  }
+  catch (error) {
+    yield put(actions.fetchPostsFailed(error));
   }
 }
 
 function* get() {
-  yield* takeEvery(actions.FETCH_POSTS,  fetchPosts);
+  yield* takeEvery(actions.FETCH_POSTS, fetchPosts);
 }
