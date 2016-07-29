@@ -5,31 +5,31 @@ import Post from '../components/Post';
 import * as actions from '../actions';
 
 class Blog extends React.Component {
-    componentDidMount() {
-        this.props.loadPosts();
-    }
 
-    render() {
-        const { posts } = this.props;
+  componentDidMount() {
+    this.props.fetchPosts();
+  }
 
-        const content = posts ? (
-          posts.map((post) => {
-              <article key={post.id}>
-                  <h4>{post.title}</h4>
-                  <section>{post.body}</section>
-              </article>
-          })
-        ) : null;
+  render() {
+    const { posts } = this.props.posts;
 
+    const content = posts ? (
+      posts.map((post) => {
         return (
-          <div className="blog">
-              {content}
-          </div>
+          <Post key={post.id} post={ post } />
         )
-    }
+      })
+    ) : null;
+
+    return (
+      <div className="blog">
+        {content}
+      </div>
+    )
+  }
 }
 
 export default connect(
-  state => ({images: state.images, selectedImage: state.selectedImage}),
+  state => ({ posts: state.posts }),
   dispatch => bindActionCreators(actions, dispatch)
 )(Blog)
