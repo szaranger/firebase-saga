@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Post from './components/Post';
+import Post from '../components/Post';
 import * as actions from '../actions';
 
-class Blog extends Component {
+class Blog extends React.Component {
     componentDidMount() {
         this.props.loadPosts();
     }

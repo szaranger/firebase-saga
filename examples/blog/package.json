@@ -2,7 +2,7 @@
   "name": "firebase-saga-example-blog",
   "version": "1.0.0",
   "description": "A blog app to demonstrate the use of firebase-saga",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "test": "npm test",
     "start": "budo ./src/main.js:build.js --dir ./src --verbose  --live -- -t babelify"
@@ -28,6 +28,7 @@
     "babel-preset-stage-1": "^6.5.0",
     "babelify": "^7.3.0",
     "browserify": "^13.1.0",
-    "budo": "^8.3.0"
+    "budo": "^8.3.0",
+    "react-redux": "^4.4.5"
   }
 }
