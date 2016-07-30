@@ -11,6 +11,7 @@ function newOpts(name = 'data') {
 		};
 		return () => {};
 	});
+
 	chan.handler = opts.handler;
 	return chan;
 }
@@ -19,6 +20,16 @@ function newKey(path) {
 	return firebase.database().ref().child(path).push().key;
 }
 
+/**
+ * Fetches a record specified by the key from the database
+ *
+ * @param path
+ * @param key
+ * @returns {*|any}
+ * import { get } from 'firebase-saga';
+ *
+ * const posts = yield call(get, 'posts', '1');
+ */
 export function* get(path, key) {
 	const ref = firebase.database().ref(`${path}/${key}`);
 	const data = yield call([ref, ref.once], 'value');
@@ -26,6 +37,16 @@ export function* get(path, key) {
 	return data.val();
 }
 
+/**
+ * Fetches entire snapshot of the database
+ *
+ * @param path
+ * @returns {*|any}
+ * @example
+ * import { getAll } from 'firebase-saga';
+ *
+ * const posts = yield call(getAll, 'posts');
+ */
 export function* getAll(path) {
 	const ref = firebase.database().ref(path);
 	const data = yield call([ref, ref.once], 'value');
@@ -73,6 +94,7 @@ export function* sync(path, mapEventToAction = {}, limit = 20) {
 
 	for (let type of EVENT_TYPES) {
 		const action = mapEventToAction[type];
+
 		if (typeof action === 'function') {
 			yield fork(runSync, ref, type, action);
 		}

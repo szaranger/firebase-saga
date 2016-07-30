@@ -4,7 +4,7 @@ A library for connecting `redux-saga` middleware to <a href="https://firebase.go
 
 ## Getting started
 
-###Install
+### Install
 
 ```
 $ npm install firebase-saga --save
@@ -18,7 +18,7 @@ The saga can be like the following:
 import { takeEvery } from 'redux-saga';
 import { call, put, fork } from 'redux-saga/effects';
 import * as actions from '../actions';
-import { getAll } from 'firebase-saga';
+import { getAll, get } from 'firebase-saga';
 
 function* fetchPosts() {
     try {
@@ -30,13 +30,28 @@ function* fetchPosts() {
     }
 }
 
+function* fetchPost() {
+    try {
+        const posts = yield call(get, 'posts', '1');
+        yield put(actions.postReceived(posts));
+    }
+    catch (error) {
+        yield put(actions.fetchPostFailed(error));
+    }
+}
+
 function* watchFetchPosts() {
     yield* takeEvery(actions.FETCH_POSTS, fetchPosts);
 }
 
+function* watchFetchPost() {
+    yield* takeEvery(actions.FETCH_POST, fetchPost);
+}
+
 export default function* root() {
     yield [
-        fork(watchFetchPosts)
+        fork(watchFetchPosts),
+        fork(watchFetchPost)
     ]
 }
 ```

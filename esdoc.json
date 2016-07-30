@@ -1,0 +1,18 @@
+{
+    "source": "./src",
+    "destination": "./docs",
+    "excludes": ["\\.spec\\.js$"],
+    "plugins": [{
+        "name": "esdoc-es7-plugin"
+    }],
+    "manual": {
+        "overview": ["./manual/overview.md"],
+        "installation": ["./manual/installation.md"],
+        "usage": ["./manual/usage.md"],
+        "tutorial": ["./manual/tutorial.md"],
+        "configuration": ["./manual/configuration.md"],
+        "example": ["./manual/example.md"],
+        "faq": ["./manual/faq.md"],
+        "changelog": ["./CHANGELOG.md"]
+    }
+}

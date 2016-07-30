@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl">
+  <title data-ice="title">API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/szaranger/firebase-saga" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-create">create</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-get">get</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getAll">getAll</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-sync">sync</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-update">update</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="firebase-saga">firebase-saga</h1>
+<p>A library for connecting <code>redux-saga</code> middleware to <a href="https://firebase.google.com/">Firebase</a>.</p>
+<h2 id="getting-started">Getting started</h2>
+<p>###Install</p>
+<pre><code><code class="source-code prettyprint">$ npm install firebase-saga --save</code>
+</code></pre><h3 id="integrate-firebase-with-sagas">Integrate Firebase with Sagas</h3>
+<p>The saga can be like the following:</p>
+<pre><code><code class="source-code prettyprint">import { takeEvery } from &apos;redux-saga&apos;;
+import { call, put, fork } from &apos;redux-saga/effects&apos;;
+import * as actions from &apos;../actions&apos;;
+import { getAll } from &apos;firebase-saga&apos;;
+
+function* fetchPosts() {
+    try {
+        const posts = yield call(getAll, &apos;posts&apos;);
+        yield put(actions.postsReceived(posts));
+    }
+    catch (error) {
+        yield put(actions.fetchPostsFailed(error));
+    }
+}
+
+function* watchFetchPosts() {
+    yield* takeEvery(actions.FETCH_POSTS, fetchPosts);
+}
+
+export default function* root() {
+    yield [
+        fork(watchFetchPosts)
+    ]
+}</code>
+</code></pre><h3 id="add-firebase-to-your-web-app">Add Firebase to your web app</h3>
+<p>If you are using CDN only, add the URL to the <code>index.html</code> file, and specify the <strong>Firebase</strong> config:</p>
+<pre><code><code class="source-code prettyprint">&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;main id=&quot;root&quot;&gt;&lt;/main&gt;
+    &lt;script src=&quot;https://www.gstatic.com/firebasejs/3.2.0/firebase.js&quot;&gt;
+    &lt;/script&gt;
+        &lt;script&gt;
+            // Initialize Firebase
+            var config = {
+                apiKey: &apos;&lt;YOUR API KEY&gt;&apos;,
+                authDomain: &apos;&lt;YOUR APP NAME&gt;.firebaseapp.com&apos;,
+                databaseURL: &apos;https://&lt;YOUR APP NAME&gt;.firebaseio.com&apos;,
+                storageBucket: &apos;&lt;YOUR APP NAME&gt;.appspot.com&apos;
+            };
+            firebase.initializeApp(config);
+        &lt;/script&gt;
+        &lt;script src=&quot;build.js&quot;&gt;&lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code>
+</code></pre><p>If you are using <strong>Webpack</strong> or <strong>Browserify</strong>, you can install the <strong>firebase</strong> node module and then import it into the root components. </p>
+<pre><code><code class="source-code prettyprint">import &apos;babel-polyfill&apos;;
+import React from &apos;react&apos;;
+import ReactDOM from &apos;react-dom&apos;;
+import { Provider } from &apos;react-redux&apos;;
+import { createStore, applyMiddleware } from &apos;redux&apos;;
+import createSagaMiddleware from &apos;redux-saga&apos;;
+import createLogger from &apos;redux-logger&apos;;
+import firebase from &apos;firebase&apos;;
+import Blog from &apos;./containers/Blog&apos;;
+import rootReducer from &apos;./reducers&apos;;
+import rootSaga from &apos;./sagas&apos;;
+
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(
+    rootReducer,
+    window.devToolsExtension ? window.devToolsExtension() : f =&gt; f,
+    applyMiddleware(sagaMiddleware)
+);
+sagaMiddleware.run(rootSaga);
+
+firebase.initializeApp({
+    apiKey: &apos;&lt;YOUR API KEY&gt;&apos;,
+    authDomain: &apos;&lt;YOUR APP NAME&gt;.firebaseapp.com&apos;,
+    databaseURL: &apos;https://&lt;YOUR APP NAME&gt;.firebaseio.com&apos;,
+    storageBucket: &apos;&lt;YOUR APP NAME&gt;.appspot.com&apos;
+});
+
+ReactDOM.render(
+    &lt;Provider store={store}&gt;
+        &lt;Blog /&gt;
+    &lt;/Provider&gt;,
+    document.getElementById(&apos;root&apos;)
+);</code>
+</code></pre></div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.7)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
