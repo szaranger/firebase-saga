@@ -1,9 +1,12 @@
 export const FETCH_POSTS = 'FETCH_POSTS';
 export const FETCH_POST = 'FETCH_POST';
+export const CREATE_POST = 'CREATE_POST';
 export const POSTS_RECEIVED = 'POSTS_RECEIVED';
 export const POST_RECEIVED = 'POST_RECEIVED';
+export const POST_CREATED = 'POST_RECEIVED';
 export const FETCH_POSTS_FAILED = 'FETCH_POSTS_FAILED';
 export const FETCH_POST_FAILED = 'FETCH_POST_FAILED';
+export const POST_CREATION_FAILED = 'POST_CREATION_FAILED';
 
 export function fetchPosts() {
   return {
@@ -42,6 +45,27 @@ export function postReceived(post) {
 export function fetchPostFailed(error) {
     return {
         type: FETCH_POST_FAILED,
+        error
+    };
+}
+
+export function createPost(formData) {
+    return {
+        type: CREATE_POST,
+        formData
+    };
+}
+
+export function postCreated(post) {
+    return {
+        type: POST_CREATED,
+        post
+    };
+}
+
+export function postCreationFailed(error) {
+    return {
+        type: POST_CREATION_FAILED,
         error
     };
 }

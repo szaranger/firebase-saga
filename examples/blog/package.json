@@ -17,6 +17,7 @@
     "babel-polyfill": "^6.9.1",
     "firebase": "^3.2.1",
     "firebase-saga": "^1.0.13",
+    "node-uuid": "^1.4.7",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
     "react-router": "^2.6.1",
