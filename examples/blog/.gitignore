@@ -31,4 +31,6 @@ node_modules
 
 .idea
 
-.firebaseConfig
+# Config
+
+src/config/*.*

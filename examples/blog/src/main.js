@@ -12,6 +12,7 @@ import Blog from './containers/Blog';
 import New from './containers/New';
 import rootReducer from './reducers';
 import rootSaga from './sagas';
+import firebaseConfig from './config/firebase';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -22,12 +23,20 @@ const store = createStore(
 );
 sagaMiddleware.run(rootSaga);
 
-firebase.initializeApp({
-   apiKey: '<YOUR API KEY>',
-   authDomain: '<YOUR APP NAME>.firebaseapp.com',
-   databaseURL: 'https://<YOUR APP NAME>.firebaseio.com',
-   storageBucket: '<YOUR APP NAME>.appspot.com'
-});
+/**
+ * You can save your config settings in a firebase config file
+ * `config/firebase.js` or
+ * uncomment the code block below and fill in the details:
+ */
+
+// firebase.initializeApp({
+//    apiKey: '<YOUR API KEY>',
+//    authDomain: '<YOUR APP NAME>.firebaseapp.com',
+//    databaseURL: 'https://<YOUR APP NAME>.firebaseio.com',
+//    storageBucket: '<YOUR APP NAME>.appspot.com'
+// });
+
+firebase.initializeApp(firebaseConfig);
 
 ReactDOM.render(
     <Provider store={store}>
