@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { POSTS_RECEIVED, POST_RECEIVED, CREATE_POST, POST_CREATED } from '../actions';
+import { POSTS_RECEIVED, POST_RECEIVED, CREATE_POST, POST_CREATED, POST_CREATION_FAILED } from '../actions';
 
 const posts = (state = {posts: []}, action) => {
 
@@ -13,22 +13,34 @@ const posts = (state = {posts: []}, action) => {
                 )
             };
         case POST_RECEIVED:
-        case POST_CREATED:
             return {
                 ...state,
                 posts: [action.post]
             };
+        case POST_CREATED:
+            return {
+                ...state,
+                completed: true
+            };
         case CREATE_POST:
             return {
                 ...state,
+                completed: false,
                 formData: action.formData
+            };
+        case POST_CREATION_FAILED:
+            return {
+                ...state,
+                error: action.error
             };
         default:
             return state;
     }
 };
 
-export const getFormData = (state) => state.formData;
+export const getFormData = (state) => {
+    return state.posts.formData;
+}
 
 export default combineReducers(
     { posts }

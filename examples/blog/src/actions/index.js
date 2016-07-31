@@ -56,10 +56,9 @@ export function createPost(formData) {
     };
 }
 
-export function postCreated(post) {
+export function postCreated() {
     return {
-        type: POST_CREATED,
-        post
+        type: POST_CREATED
     };
 }
 

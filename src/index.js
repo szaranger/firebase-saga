@@ -54,6 +54,23 @@ export function* getAll(path) {
 	return data.val();
 }
 
+/**
+ * Saves new data to the database with `set()`
+ *
+ * @param path
+ * @param fn
+ * @example
+ * import { create } from 'firebase-saga';
+ *
+ * yield call(create, 'posts', () => ({
+ *              [`posts/1234`]: {
+ *                   title: 'My Second Post',
+ *                   body: 'Second post details',
+ *                   timestamp: +new Date
+ *               }
+ *           })
+ *);
+ */
 export function* create(path, fn) {
 	const key = yield call(newKey, path);
 	const payload = yield call(fn, key);

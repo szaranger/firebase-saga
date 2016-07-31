@@ -27,8 +27,15 @@ function* fetchPost() {
 function* createPost() {
     try {
         const formData = yield select(getFormData);
-        const posts = yield call(saveFormData, formData);
-        yield put(actions.postCreated(posts));
+        yield call(create, 'posts', () => ({
+                [`posts/${formData.id}`]: {
+                    title: formData.title,
+                    body: formData.body,
+                    timestamp: formData.timestamp
+                }
+            })
+        );
+        yield put(actions.postCreated());
     }
     catch (error) {
         yield put(actions.postCreationFailed(error));

@@ -1,19 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { browserHistory } from 'react-router'
 import { v1 } from 'node-uuid';
 import * as actions from '../actions';
 
 class New extends React.Component {
 
-    onSubmit() {
+    onSubmit({ title, body }) {
         this.props.createPost({
             id: v1(),
-            title: this.refs.title,
-            body: this.refs.body,
+            title: title.value,
+            body: body.value,
             timestamp: +new Date
         });
+
+        browserHistory.push('/');
     }
+
     render() {
         return (
             <form>
@@ -21,7 +25,7 @@ class New extends React.Component {
                 <input type="text" ref="title" /><br/>
                 <label>Body</label><br/>
                 <textarea rows="5" ref="body" /><br />
-                <button onClick={() => this.onSubmit() } className="btn btn-primary">Get first post</button>
+                <button onClick={() => this.onSubmit(this.refs) } className="btn btn-primary">Submit</button>
             </form>
         );
     }

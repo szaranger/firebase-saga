@@ -18,7 +18,7 @@ The saga can be like the following:
 import { takeEvery } from 'redux-saga';
 import { call, put, fork } from 'redux-saga/effects';
 import * as actions from '../actions';
-import { getAll, get } from 'firebase-saga';
+import { getAll, get, create } from 'firebase-saga';
 
 function* fetchPosts() {
     try {
@@ -37,6 +37,24 @@ function* fetchPost() {
     }
     catch (error) {
         yield put(actions.fetchPostFailed(error));
+    }
+}
+
+function* createPost() {
+    try {
+        const formData = yield select(getFormData);
+        yield call(create, 'posts', () => ({
+                [`posts/${formData.id}`]: {
+                    title: formData.title,
+                    body: formData.body,
+                    timestamp: formData.timestamp
+                }
+            })
+        );
+        yield put(actions.postCreated());
+    }
+    catch (error) {
+        yield put(actions.postCreationFailed(error));
     }
 }
 
@@ -122,6 +140,10 @@ ReactDOM.render(
     document.getElementById('root')
 );
 ```
+
+## Example
+
+* [Sample Application](https://github.com/szaranger/firebase-saga/tree/master/examples/blog)
 
 ## Documentation
 
