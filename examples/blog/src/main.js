@@ -22,18 +22,11 @@ const store = createStore(
 );
 sagaMiddleware.run(rootSaga);
 
-//firebase.initializeApp({
-//    apiKey: '<YOUR API KEY>',
-//    authDomain: '<YOUR APP NAME>.firebaseapp.com',
-//    databaseURL: 'https://<YOUR APP NAME>.firebaseio.com',
-//    storageBucket: '<YOUR APP NAME>.appspot.com'
-//});
-
 firebase.initializeApp({
-    apiKey: "AIzaSyArSDe97fa8AvKaNpB4kevj_-2WLnPulXg",
-    authDomain: "blog-ef62c.firebaseapp.com",
-    databaseURL: "https://blog-ef62c.firebaseio.com",
-    storageBucket: "blog-ef62c.appspot.com"
+   apiKey: '<YOUR API KEY>',
+   authDomain: '<YOUR APP NAME>.firebaseapp.com',
+   databaseURL: 'https://<YOUR APP NAME>.firebaseio.com',
+   storageBucket: '<YOUR APP NAME>.appspot.com'
 });
 
 ReactDOM.render(
