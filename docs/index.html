@@ -44,14 +44,14 @@
 <div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="firebase-saga">firebase-saga</h1>
 <p>A library for connecting <code>redux-saga</code> middleware to <a href="https://firebase.google.com/">Firebase</a>.</p>
 <h2 id="getting-started">Getting started</h2>
-<p>###Install</p>
+<h3 id="install">Install</h3>
 <pre><code><code class="source-code prettyprint">$ npm install firebase-saga --save</code>
 </code></pre><h3 id="integrate-firebase-with-sagas">Integrate Firebase with Sagas</h3>
 <p>The saga can be like the following:</p>
 <pre><code><code class="source-code prettyprint">import { takeEvery } from &apos;redux-saga&apos;;
 import { call, put, fork } from &apos;redux-saga/effects&apos;;
 import * as actions from &apos;../actions&apos;;
-import { getAll } from &apos;firebase-saga&apos;;
+import { getAll, get } from &apos;firebase-saga&apos;;
 
 function* fetchPosts() {
     try {
@@ -63,13 +63,28 @@ function* fetchPosts() {
     }
 }
 
+function* fetchPost() {
+    try {
+        const posts = yield call(get, &apos;posts&apos;, &apos;1&apos;);
+        yield put(actions.postReceived(posts));
+    }
+    catch (error) {
+        yield put(actions.fetchPostFailed(error));
+    }
+}
+
 function* watchFetchPosts() {
     yield* takeEvery(actions.FETCH_POSTS, fetchPosts);
 }
 
+function* watchFetchPost() {
+    yield* takeEvery(actions.FETCH_POST, fetchPost);
+}
+
 export default function* root() {
     yield [
-        fork(watchFetchPosts)
+        fork(watchFetchPosts),
+        fork(watchFetchPost)
     ]
 }</code>
 </code></pre><h3 id="add-firebase-to-your-web-app">Add Firebase to your web app</h3>

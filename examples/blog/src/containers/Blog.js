@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { browserHistory } from 'react-router'
 import Post from '../components/Post';
 import * as actions from '../actions';
 
@@ -26,13 +27,14 @@ class Blog extends React.Component {
         return (
             <div className="blog">
                 {content}
-                <button onClick={() => this.props.fetchPost(1) }>Get first post</button>
+                <button onClick={() => this.props.fetchPost(1) } className="btn btn-default">Get first post</button>
+                <button onClick={() => browserHistory.push('/new')} className="btn btn-success">Create new post</button>
             </div>
         )
     }
 }
 
 export default connect(
-    state => ({posts: state.posts}),
+    state => ({ posts: state.posts }),
     dispatch => bindActionCreators(actions, dispatch)
 )(Blog)

@@ -32,6 +32,7 @@ function newOpts() {
 		};
 		return function () {};
 	});
+
 	chan.handler = opts.handler;
 	return chan;
 }
@@ -40,6 +41,16 @@ function newKey(path) {
 	return firebase.database().ref().child(path).push().key;
 }
 
+/**
+ * Fetches a record specified by the key from the database
+ *
+ * @param path
+ * @param key
+ * @returns {*|any}
+ * import { get } from 'firebase-saga';
+ *
+ * const posts = yield call(get, 'posts', '1');
+ */
 function get(path, key) {
 	var ref, data;
 	return regeneratorRuntime.wrap(function get$(_context) {
@@ -62,6 +73,16 @@ function get(path, key) {
 	}, _marked[0], this);
 }
 
+/**
+ * Fetches entire snapshot of the database
+ *
+ * @param path
+ * @returns {*|any}
+ * @example
+ * import { getAll } from 'firebase-saga';
+ *
+ * const posts = yield call(getAll, 'posts');
+ */
 function getAll(path) {
 	var ref, data;
 	return regeneratorRuntime.wrap(function getAll$(_context2) {

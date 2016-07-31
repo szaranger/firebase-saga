@@ -122,3 +122,15 @@ ReactDOM.render(
     document.getElementById('root')
 );
 ```
+
+## Documentation
+
+* [Overview](http://szaranger.github.io/firebase-saga/docs/manual/overview.html)
+* [Installation](http://szaranger.github.io/firebase-saga/docs/manual/installation.html)
+* [Tutorial](http://szaranger.github.io/firebase-saga/docs/manual/tutorial.html)
+* [Usage](http://szaranger.github.io/firebase-saga/docs/manual/usage.html)
+* [Configuration](http://szaranger.github.io/firebase-saga/docs/manual/configuration.html)
+* [Example](http://szaranger.github.io/firebase-saga/docs/manual/example.html)
+* [Reference](http://szaranger.github.io/firebase-saga/docs/identifiers.html)
+* [FAQ](http://szaranger.github.io/firebase-saga/docs/manual/faq.html)
+* [Changelog](http://szaranger.github.io/firebase-saga/docs/manual/changelog.html)

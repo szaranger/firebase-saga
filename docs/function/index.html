@@ -82,13 +82,14 @@
     <td>
       <div>
         <p>
-          <span data-ice="generator">*</span> <span data-ice="name"><span><a href="function/index.html#static-function-get">get</a></span></span><span data-ice="signature">(path: <span>*</span>, key: <span>*</span>): <span>*</span></span>
+          <span data-ice="generator">*</span> <span data-ice="name"><span><a href="function/index.html#static-function-get">get</a></span></span><span data-ice="signature">(path: <span>*</span>, key: <span>*</span>): <span>*</span> | <span>any</span></span>
         </p>
       </div>
       <div>
         
         
-        
+        <div data-ice="description"><p>Fetches a record specified by the key from the database</p>
+</div>
       </div>
     </td>
     <td>
@@ -113,7 +114,7 @@
       <div>
         
         
-        <div data-ice="description"><p>Fetches entire recordset</p>
+        <div data-ice="description"><p>Fetches entire snapshot of the database</p>
 </div>
       </div>
     </td>
@@ -188,11 +189,11 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber47">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber57">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {create} from &apos;<span><a href="file/src/index.js.html#lineNumber47">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {create} from &apos;<span><a href="file/src/index.js.html#lineNumber57">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -256,18 +257,19 @@
     
     
     <span data-ice="generator">*</span>
-    <span data-ice="name">get</span><span data-ice="signature">(path: <span>*</span>, key: <span>*</span>): <span>*</span></span>
+    <span data-ice="name">get</span><span data-ice="signature">(path: <span>*</span>, key: <span>*</span>): <span>*</span> | <span>any</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber23">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber33">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {get} from &apos;<span><a href="file/src/index.js.html#lineNumber23">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {get} from &apos;<span><a href="file/src/index.js.html#lineNumber33">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
   
   
-  
+  <div data-ice="description"><p>Fetches a record specified by the key from the database</p>
+</div>
 
   
 
@@ -300,8 +302,10 @@
     <h4>Return:</h4>
     <table>
       <tr>
-        <td class="return-type" data-ice="returnType"><span>*</span></td>
-        
+        <td class="return-type" data-ice="returnType"><span>*</span> | <span>any</span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>import { get } from &apos;firebase-saga&apos;;</p>
+<p>const posts = yield call(get, &apos;posts&apos;, &apos;1&apos;);</p>
+</td>
       </tr>
     </table>
     <div data-ice="returnProperties">
@@ -332,14 +336,14 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber40">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber50">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getAll} from &apos;<span><a href="file/src/index.js.html#lineNumber40">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getAll} from &apos;<span><a href="file/src/index.js.html#lineNumber50">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>Fetches entire recordset</p>
+  <div data-ice="description"><p>Fetches entire snapshot of the database</p>
 </div>
 
   
@@ -408,11 +412,11 @@ const posts = yield call(getAll, &apos;posts&apos;);</code></pre>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber82">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber92">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {sync} from &apos;<span><a href="file/src/index.js.html#lineNumber82">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {sync} from &apos;<span><a href="file/src/index.js.html#lineNumber92">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -478,11 +482,11 @@ const posts = yield call(getAll, &apos;posts&apos;);</code></pre>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber59">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber69">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {update} from &apos;<span><a href="file/src/index.js.html#lineNumber59">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {update} from &apos;<span><a href="file/src/index.js.html#lineNumber69">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
   
   
   
