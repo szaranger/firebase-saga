@@ -19,13 +19,11 @@ const posts = (state = {posts: []}, action) => {
             };
         case POST_CREATED:
             return {
-                ...state,
-                completed: true
+                ...state
             };
         case CREATE_POST:
             return {
                 ...state,
-                completed: false,
                 formData: action.formData
             };
         case POST_CREATION_FAILED:

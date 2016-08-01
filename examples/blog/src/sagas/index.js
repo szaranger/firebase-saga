@@ -1,8 +1,8 @@
-import { takeEvery } from 'redux-saga';
-import { call, put, fork, select } from 'redux-saga/effects';
+import {takeEvery} from 'redux-saga';
+import {call, put, fork, select} from 'redux-saga/effects';
 import * as actions from '../actions';
-import { getFormData } from '../reducers';
-import { getAll, get, create } from 'firebase-saga';
+import {getFormData} from '../reducers';
+import {getAll, get, create, push} from 'firebase-saga';
 
 function* fetchPosts() {
     try {
@@ -35,6 +35,13 @@ function* createPost() {
                 }
             })
         );
+        // Generates a new child location using a unique key
+        // yield call(push, 'posts', () => ({
+        //             title: formData.title,
+        //             body: formData.body,
+        //             timestamp: formData.timestamp
+        //     })
+        // );
         yield put(actions.postCreated());
     }
     catch (error) {

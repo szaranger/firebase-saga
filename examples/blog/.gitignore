@@ -34,3 +34,4 @@ node_modules
 # Config
 
 src/config/*.*
+firebase-helper.js

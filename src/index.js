@@ -3,7 +3,7 @@ import { put, fork, call, take } from 'redux-saga/effects';
 
 const EVENT_TYPES = ['child_added', 'child_removed'];
 
-function newOpts(name = 'data') {
+const newOpts = (name = 'data') => {
 	const opts = {};
 	const chan = eventChannel(emit => {
 		opts.handler = obj => {
@@ -14,11 +14,9 @@ function newOpts(name = 'data') {
 
 	chan.handler = opts.handler;
 	return chan;
-}
+};
 
-function newKey(path) {
-	return firebase.database().ref().child(path).push().key;
-}
+const newKey = (path) => firebase.database().ref().child(path).push().key;
 
 /**
  * Fetches a record specified by the key from the database
@@ -94,6 +92,33 @@ export function* update(path, key, payload) {
 		take(opts)
 	];
 	return error;
+}
+
+/**
+ * Generates a new child location using a unique key
+ *
+ * @param path
+ * @param fn
+ * @example
+ * import { push } from 'firebase-saga';
+ *
+ * yield call(push, 'posts', () => ({
+ *             title: formData.title,
+ *             body: formData.body,
+ *             timestamp: formData.timestamp
+ *       })
+ *);
+ */
+export function* push(path, fn) {
+    const key = yield call(newKey, path);
+    const payload = yield call(fn, key);
+    const opts = newOpts('error');
+    const ref = firebase.database().ref(path);
+    const [ _, { error } ] = yield [
+        call([ref, ref.push], payload, opts.handler),
+        take(opts)
+    ];
+    return error;
 }
 
 function* runSync(ref, eventType, creator) {
