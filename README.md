@@ -2,6 +2,9 @@
 
 A library for connecting `redux-saga` middleware to <a href="https://firebase.google.com/">Firebase</a>.
 
+[![version](https://img.shields.io/npm/v/firebase-saga.svg?style=flat-square)](https://www.npmjs.com/package/firebase-saga)
+[![version](https://img.shields.io/npm/dt/firebase-saga.svg?style=flat-square)](https://www.npmjs.com/package/firebase-saga)
+
 ## Getting started
 
 ### Install
