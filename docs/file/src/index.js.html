@@ -35,6 +35,8 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-create">create</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-get">get</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getAll">getAll</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-push">push</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-remove">remove</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-sync">sync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-update">update</a></span></span></li>
 </ul>
@@ -47,7 +49,7 @@ import { put, fork, call, take } from &apos;redux-saga/effects&apos;;
 
 const EVENT_TYPES = [&apos;child_added&apos;, &apos;child_removed&apos;];
 
-function newOpts(name = &apos;data&apos;) {
+const newOpts = (name = &apos;data&apos;) =&gt; {
 	const opts = {};
 	const chan = eventChannel(emit =&gt; {
 		opts.handler = obj =&gt; {
@@ -58,11 +60,9 @@ function newOpts(name = &apos;data&apos;) {
 
 	chan.handler = opts.handler;
 	return chan;
-}
+};
 
-function newKey(path) {
-	return firebase.database().ref().child(path).push().key;
-}
+const newKey = (path) =&gt; firebase.database().ref().child(path).push().key;
 
 /**
  * Fetches a record specified by the key from the database
@@ -72,7 +72,7 @@ function newKey(path) {
  * @returns {*|any}
  * import { get } from &apos;firebase-saga&apos;;
  *
- * const posts = yield call(get, &apos;posts&apos;, &apos;1&apos;);
+ * const posts = yield call(get, &apos;posts&apos;, &apos;1234&apos;);
  */
 export function* get(path, key) {
 	const ref = firebase.database().ref(`${path}/${key}`);
@@ -98,6 +98,23 @@ export function* getAll(path) {
 	return data.val();
 }
 
+/**
+ * Saves new data to the database with `set()`
+ *
+ * @param path
+ * @param fn
+ * @example
+ * import { create } from &apos;firebase-saga&apos;;
+ *
+ * yield call(create, &apos;posts&apos;, () =&gt; ({
+ *              [`posts/1234`]: {
+ *                   title: &apos;My Second Post&apos;,
+ *                   body: &apos;Second post details&apos;,
+ *                   timestamp: +new Date
+ *               }
+ *           })
+ *);
+ */
 export function* create(path, fn) {
 	const key = yield call(newKey, path);
 	const payload = yield call(fn, key);
@@ -121,6 +138,70 @@ export function* update(path, key, payload) {
 		take(opts)
 	];
 	return error;
+}
+
+/**
+ * Generates a new child location using a unique key
+ *
+ * @param path
+ * @param fn
+ * @example
+ * import { push } from &apos;firebase-saga&apos;;
+ *
+ * yield call(push, &apos;posts&apos;, () =&gt; ({
+ *             title: formData.title,
+ *             body: formData.body,
+ *             timestamp: formData.timestamp
+ *       })
+ *);
+ */
+export function* push(path, fn) {
+    const key = yield call(newKey, path);
+    const payload = yield call(fn, key);
+    const opts = newOpts(&apos;error&apos;);
+    const ref = firebase.database().ref(path);
+    const [ _, { error } ] = yield [
+        call([ref, ref.push], payload, opts.handler),
+        take(opts)
+    ];
+    return error;
+}
+
+/**
+ * Deletes a given child location using a unique key
+ *
+ * @param path
+ * @param key
+ * @example
+ * import { push } from &apos;firebase-saga&apos;;
+ *
+ * yield call(push, &apos;posts&apos;, () =&gt; ({
+ *             title: formData.title,
+ *             body: formData.body,
+ *             timestamp: formData.timestamp
+ *       })
+ *);
+ */
+
+/**
+ * Deletes a given child location using a unique key
+ *
+ * @param path
+ * @param key
+ * @returns {*}
+ * @example
+ * import { remove } from &apos;firebase-saga&apos;;
+ *
+ * yield call(remove, &apos;posts&apos;, &apos;1234&apos;)
+ */
+export function* remove(path, key) {
+    const opts = newOpts(&apos;error&apos;);
+    const ref = firebase.database().ref(`${path}/${key}`);
+    const [ _, { error } ] = yield [
+        call([ref, ref.remove], opts.handler),
+        take(opts)
+    ];
+    return error;
 }
 
 function* runSync(ref, eventType, creator) {

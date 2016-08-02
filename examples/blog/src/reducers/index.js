@@ -1,10 +1,14 @@
 import { combineReducers } from 'redux';
-import { POSTS_RECEIVED, POST_RECEIVED, CREATE_POST, POST_CREATED, POST_CREATION_FAILED, DELETE_POST, POST_DELETED, POST_DELETION_FAILED } from '../actions';
+import * as constants from '../actions';
 
 const posts = (state = {posts: []}, action) => {
 
     switch (action.type) {
-        case POSTS_RECEIVED:
+        case constants.FETCH_POST:
+            return {
+                id: action.id
+            };
+        case constants.POSTS_RECEIVED:
             const posts = action.posts;
             return {
                 ...state,
@@ -12,35 +16,35 @@ const posts = (state = {posts: []}, action) => {
                     (key) => Object.assign({}, {id: key}, posts[key])
                 )
             };
-        case POST_RECEIVED:
+        case constants.POST_RECEIVED:
             return {
                 ...state,
                 posts: [action.post]
             };
-        case CREATE_POST:
+        case constants.CREATE_POST:
             return {
                 ...state,
                 formData: action.formData
             };
-        case POST_CREATED:
+        case constants.POST_CREATED:
             return {
                 ...state
             };
-        case POST_CREATION_FAILED:
+        case constants.POST_CREATION_FAILED:
             return {
                 ...state,
                 error: action.error
             };
-        case DELETE_POST:
+        case constants.DELETE_POST:
             return {
                 ...state,
                 id: action.id
             };
-        case POST_DELETED:
+        case constants.POST_DELETED:
             return {
                 ...state
             };
-        case POST_DELETION_FAILED:
+        case constants.POST_DELETION_FAILED:
             return {
                 ...state,
                 error: action.error

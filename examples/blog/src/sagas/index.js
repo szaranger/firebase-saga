@@ -16,7 +16,8 @@ function* fetchPosts() {
 
 function* fetchPost() {
     try {
-        const posts = yield call(get, 'posts', '6c84fb90-12c4-11e1-840d-7b25c5ee775a');
+        const postId = yield select(getId);
+        const posts = yield call(get, 'posts', postId);
         yield put(actions.postReceived(posts));
     }
     catch (error) {

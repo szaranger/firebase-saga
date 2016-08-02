@@ -18,6 +18,18 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "firebase-saga/src/index.js~push",
+    "function/index.html#static-function-push",
+    "<span>push</span> <span class=\"search-result-import-path\">firebase-saga/src/index.js</span>",
+    "function"
+  ],
+  [
+    "firebase-saga/src/index.js~remove",
+    "function/index.html#static-function-remove",
+    "<span>remove</span> <span class=\"search-result-import-path\">firebase-saga/src/index.js</span>",
+    "function"
+  ],
+  [
     "firebase-saga/src/index.js~sync",
     "function/index.html#static-function-sync",
     "<span>sync</span> <span class=\"search-result-import-path\">firebase-saga/src/index.js</span>",

@@ -10,7 +10,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "import { eventChannel } from 'redux-saga';\nimport { put, fork, call, take } from 'redux-saga/effects';\n\nconst EVENT_TYPES = ['child_added', 'child_removed'];\n\nfunction newOpts(name = 'data') {\n\tconst opts = {};\n\tconst chan = eventChannel(emit => {\n\t\topts.handler = obj => {\n\t\t\temit({ [name]: obj });\n\t\t};\n\t\treturn () => {};\n\t});\n\n\tchan.handler = opts.handler;\n\treturn chan;\n}\n\nfunction newKey(path) {\n\treturn firebase.database().ref().child(path).push().key;\n}\n\n/**\n * Fetches a record specified by the key from the database\n *\n * @param path\n * @param key\n * @returns {*|any}\n * import { get } from 'firebase-saga';\n *\n * const posts = yield call(get, 'posts', '1');\n */\nexport function* get(path, key) {\n\tconst ref = firebase.database().ref(`${path}/${key}`);\n\tconst data = yield call([ref, ref.once], 'value');\n\n\treturn data.val();\n}\n\n/**\n * Fetches entire snapshot of the database\n *\n * @param path\n * @returns {*|any}\n * @example\n * import { getAll } from 'firebase-saga';\n *\n * const posts = yield call(getAll, 'posts');\n */\nexport function* getAll(path) {\n\tconst ref = firebase.database().ref(path);\n\tconst data = yield call([ref, ref.once], 'value');\n\n\treturn data.val();\n}\n\nexport function* create(path, fn) {\n\tconst key = yield call(newKey, path);\n\tconst payload = yield call(fn, key);\n\tconst opts = newOpts('error');\n\tconst ref = firebase.database().ref();\n\tconst [ _, { error } ] = yield [\n\t\tcall([ref, ref.update], payload, opts.handler),\n\t\ttake(opts)\n\t];\n\treturn error;\n}\n\nexport function* update(path, key, payload) {\n\tif (typeof payload === 'function') {\n\t\tpayload = yield call(payload);\n\t}\n\tconst opts = newOpts('error');\n\tconst ref = firebase.database().ref(`${path}/${key}`);\n\tconst [ _, { error } ] = yield [\n\t\tcall([ref, ref.update], payload, opts.handler),\n\t\ttake(opts)\n\t];\n\treturn error;\n}\n\nfunction* runSync(ref, eventType, creator) {\n\tconst opts = newOpts();\n\tyield call([ref, ref.on], eventType, opts.handler);\n\n\twhile (true) {\n\t\tconst { data } = yield take(opts);\n\t\tyield put(creator({ data }));\n\t}\n}\n\nexport function* sync(path, mapEventToAction = {}, limit = 20) {\n\tconst ref = firebase.database().ref(path).limitToLast(limit);\n\n\tfor (let type of EVENT_TYPES) {\n\t\tconst action = mapEventToAction[type];\n\n\t\tif (typeof action === 'function') {\n\t\t\tyield fork(runSync, ref, type, action);\n\t\t}\n\t}\n}\n"
+    "content": "import { eventChannel } from 'redux-saga';\nimport { put, fork, call, take } from 'redux-saga/effects';\n\nconst EVENT_TYPES = ['child_added', 'child_removed'];\n\nconst newOpts = (name = 'data') => {\n\tconst opts = {};\n\tconst chan = eventChannel(emit => {\n\t\topts.handler = obj => {\n\t\t\temit({ [name]: obj });\n\t\t};\n\t\treturn () => {};\n\t});\n\n\tchan.handler = opts.handler;\n\treturn chan;\n};\n\nconst newKey = (path) => firebase.database().ref().child(path).push().key;\n\n/**\n * Fetches a record specified by the key from the database\n *\n * @param path\n * @param key\n * @returns {*|any}\n * import { get } from 'firebase-saga';\n *\n * const posts = yield call(get, 'posts', '1234');\n */\nexport function* get(path, key) {\n\tconst ref = firebase.database().ref(`${path}/${key}`);\n\tconst data = yield call([ref, ref.once], 'value');\n\n\treturn data.val();\n}\n\n/**\n * Fetches entire snapshot of the database\n *\n * @param path\n * @returns {*|any}\n * @example\n * import { getAll } from 'firebase-saga';\n *\n * const posts = yield call(getAll, 'posts');\n */\nexport function* getAll(path) {\n\tconst ref = firebase.database().ref(path);\n\tconst data = yield call([ref, ref.once], 'value');\n\n\treturn data.val();\n}\n\n/**\n * Saves new data to the database with `set()`\n *\n * @param path\n * @param fn\n * @example\n * import { create } from 'firebase-saga';\n *\n * yield call(create, 'posts', () => ({\n *              [`posts/1234`]: {\n *                   title: 'My Second Post',\n *                   body: 'Second post details',\n *                   timestamp: +new Date\n *               }\n *           })\n *);\n */\nexport function* create(path, fn) {\n\tconst key = yield call(newKey, path);\n\tconst payload = yield call(fn, key);\n\tconst opts = newOpts('error');\n\tconst ref = firebase.database().ref();\n\tconst [ _, { error } ] = yield [\n\t\tcall([ref, ref.update], payload, opts.handler),\n\t\ttake(opts)\n\t];\n\treturn error;\n}\n\nexport function* update(path, key, payload) {\n\tif (typeof payload === 'function') {\n\t\tpayload = yield call(payload);\n\t}\n\tconst opts = newOpts('error');\n\tconst ref = firebase.database().ref(`${path}/${key}`);\n\tconst [ _, { error } ] = yield [\n\t\tcall([ref, ref.update], payload, opts.handler),\n\t\ttake(opts)\n\t];\n\treturn error;\n}\n\n/**\n * Generates a new child location using a unique key\n *\n * @param path\n * @param fn\n * @example\n * import { push } from 'firebase-saga';\n *\n * yield call(push, 'posts', () => ({\n *             title: formData.title,\n *             body: formData.body,\n *             timestamp: formData.timestamp\n *       })\n *);\n */\nexport function* push(path, fn) {\n    const key = yield call(newKey, path);\n    const payload = yield call(fn, key);\n    const opts = newOpts('error');\n    const ref = firebase.database().ref(path);\n    const [ _, { error } ] = yield [\n        call([ref, ref.push], payload, opts.handler),\n        take(opts)\n    ];\n    return error;\n}\n\n/**\n * Deletes a given child location using a unique key\n *\n * @param path\n * @param key\n * @example\n * import { push } from 'firebase-saga';\n *\n * yield call(push, 'posts', () => ({\n *             title: formData.title,\n *             body: formData.body,\n *             timestamp: formData.timestamp\n *       })\n *);\n */\n\n/**\n * Deletes a given child location using a unique key\n *\n * @param path\n * @param key\n * @returns {*}\n * @example\n * import { remove } from 'firebase-saga';\n *\n * yield call(remove, 'posts', '1234')\n */\nexport function* remove(path, key) {\n    const opts = newOpts('error');\n    const ref = firebase.database().ref(`${path}/${key}`);\n    const [ _, { error } ] = yield [\n        call([ref, ref.remove], opts.handler),\n        take(opts)\n    ];\n    return error;\n}\n\nfunction* runSync(ref, eventType, creator) {\n\tconst opts = newOpts();\n\tyield call([ref, ref.on], eventType, opts.handler);\n\n\twhile (true) {\n\t\tconst { data } = yield take(opts);\n\t\tyield put(creator({ data }));\n\t}\n}\n\nexport function* sync(path, mapEventToAction = {}, limit = 20) {\n\tconst ref = firebase.database().ref(path).limitToLast(limit);\n\n\tfor (let type of EVENT_TYPES) {\n\t\tconst action = mapEventToAction[type];\n\n\t\tif (typeof action === 'function') {\n\t\t\tyield fork(runSync, ref, type, action);\n\t\t}\n\t}\n}\n"
   },
   {
     "__docId__": 1,
@@ -35,7 +35,7 @@
   },
   {
     "__docId__": 2,
-    "kind": "function",
+    "kind": "variable",
     "static": true,
     "variation": null,
     "name": "newOpts",
@@ -48,27 +48,15 @@
     "description": null,
     "lineNumber": 6,
     "undocument": true,
-    "params": [
-      {
-        "name": "name",
-        "optional": true,
-        "types": [
-          "string"
-        ],
-        "defaultRaw": "data",
-        "defaultValue": "data"
-      }
-    ],
-    "return": {
+    "type": {
       "types": [
         "*"
       ]
-    },
-    "generator": false
+    }
   },
   {
     "__docId__": 3,
-    "kind": "function",
+    "kind": "variable",
     "static": true,
     "variation": null,
     "name": "newKey",
@@ -81,20 +69,11 @@
     "description": null,
     "lineNumber": 19,
     "undocument": true,
-    "params": [
-      {
-        "name": "path",
-        "types": [
-          "*"
-        ]
-      }
-    ],
-    "return": {
+    "type": {
       "types": [
         "*"
       ]
-    },
-    "generator": false
+    }
   },
   {
     "__docId__": 4,
@@ -109,11 +88,11 @@
     "importPath": "firebase-saga/src/index.js",
     "importStyle": "{get}",
     "description": "Fetches a record specified by the key from the database",
-    "lineNumber": 33,
+    "lineNumber": 31,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{*|any}\nimport { get } from 'firebase-saga';\n\nconst posts = yield call(get, 'posts', '1');"
+        "tagValue": "{*|any}\nimport { get } from 'firebase-saga';\n\nconst posts = yield call(get, 'posts', '1234');"
       }
     ],
     "params": [
@@ -145,7 +124,7 @@
         "any"
       ],
       "spread": false,
-      "description": "import { get } from 'firebase-saga';\n\nconst posts = yield call(get, 'posts', '1');"
+      "description": "import { get } from 'firebase-saga';\n\nconst posts = yield call(get, 'posts', '1234');"
     },
     "generator": true
   },
@@ -165,7 +144,7 @@
     "examples": [
       "import { getAll } from 'firebase-saga';\n\nconst posts = yield call(getAll, 'posts');"
     ],
-    "lineNumber": 50,
+    "lineNumber": 48,
     "unknown": [
       {
         "tagName": "@returns",
@@ -207,21 +186,31 @@
     "export": true,
     "importPath": "firebase-saga/src/index.js",
     "importStyle": "{create}",
-    "description": null,
-    "lineNumber": 57,
-    "undocument": true,
+    "description": "Saves new data to the database with `set()`",
+    "examples": [
+      "import { create } from 'firebase-saga';\n\nyield call(create, 'posts', () => ({\n             [`posts/1234`]: {\n                  title: 'My Second Post',\n                  body: 'Second post details',\n                  timestamp: +new Date\n              }\n          })\n);"
+    ],
+    "lineNumber": 72,
     "params": [
       {
-        "name": "path",
+        "nullable": null,
         "types": [
           "*"
-        ]
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "path",
+        "description": ""
       },
       {
-        "name": "fn",
+        "nullable": null,
         "types": [
           "*"
-        ]
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "fn",
+        "description": ""
       }
     ],
     "return": {
@@ -244,7 +233,7 @@
     "importPath": "firebase-saga/src/index.js",
     "importStyle": "{update}",
     "description": null,
-    "lineNumber": 69,
+    "lineNumber": 84,
     "undocument": true,
     "params": [
       {
@@ -278,6 +267,107 @@
     "kind": "function",
     "static": true,
     "variation": null,
+    "name": "push",
+    "memberof": "src/index.js",
+    "longname": "src/index.js~push",
+    "access": null,
+    "export": true,
+    "importPath": "firebase-saga/src/index.js",
+    "importStyle": "{push}",
+    "description": "Generates a new child location using a unique key",
+    "examples": [
+      "import { push } from 'firebase-saga';\n\nyield call(push, 'posts', () => ({\n            title: formData.title,\n            body: formData.body,\n            timestamp: formData.timestamp\n      })\n);"
+    ],
+    "lineNumber": 112,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "path",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "fn",
+        "description": ""
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": true
+  },
+  {
+    "__docId__": 9,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "remove",
+    "memberof": "src/index.js",
+    "longname": "src/index.js~remove",
+    "access": null,
+    "export": true,
+    "importPath": "firebase-saga/src/index.js",
+    "importStyle": "{remove}",
+    "description": "Deletes a given child location using a unique key",
+    "examples": [
+      "import { remove } from 'firebase-saga';\n\nyield call(remove, 'posts', '1234')"
+    ],
+    "lineNumber": 151,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{*}"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "path",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "key",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "*"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "generator": true
+  },
+  {
+    "__docId__": 10,
+    "kind": "function",
+    "static": true,
+    "variation": null,
     "name": "runSync",
     "memberof": "src/index.js",
     "longname": "src/index.js~runSync",
@@ -286,7 +376,7 @@
     "importPath": "firebase-saga/src/index.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 82,
+    "lineNumber": 161,
     "undocument": true,
     "params": [
       {
@@ -311,7 +401,7 @@
     "generator": true
   },
   {
-    "__docId__": 9,
+    "__docId__": 11,
     "kind": "function",
     "static": true,
     "variation": null,
@@ -323,7 +413,7 @@
     "importPath": "firebase-saga/src/index.js",
     "importStyle": "{sync}",
     "description": null,
-    "lineNumber": 92,
+    "lineNumber": 171,
     "undocument": true,
     "params": [
       {
@@ -354,7 +444,7 @@
     "generator": true
   },
   {
-    "__docId__": 11,
+    "__docId__": 13,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -367,7 +457,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 12,
+    "__docId__": 14,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -380,7 +470,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 13,
+    "__docId__": 15,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -393,7 +483,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 14,
+    "__docId__": 16,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -406,7 +496,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 15,
+    "__docId__": 17,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -419,7 +509,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 16,
+    "__docId__": 18,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -432,7 +522,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 17,
+    "__docId__": 19,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -445,7 +535,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 18,
+    "__docId__": 20,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -458,7 +548,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 19,
+    "__docId__": 21,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -471,7 +561,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 20,
+    "__docId__": 22,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -484,7 +574,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 21,
+    "__docId__": 23,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -497,7 +587,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 22,
+    "__docId__": 24,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -510,7 +600,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 23,
+    "__docId__": 25,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -523,7 +613,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 24,
+    "__docId__": 26,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -536,7 +626,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 25,
+    "__docId__": 27,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -549,7 +639,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 26,
+    "__docId__": 28,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -562,7 +652,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 27,
+    "__docId__": 29,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -575,7 +665,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 28,
+    "__docId__": 30,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -588,7 +678,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 29,
+    "__docId__": 31,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -601,7 +691,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 30,
+    "__docId__": 32,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -614,7 +704,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 31,
+    "__docId__": 33,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -627,7 +717,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 32,
+    "__docId__": 34,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -640,7 +730,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 33,
+    "__docId__": 35,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -653,7 +743,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 34,
+    "__docId__": 36,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -666,7 +756,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 35,
+    "__docId__": 37,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -679,7 +769,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 36,
+    "__docId__": 38,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -692,7 +782,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 37,
+    "__docId__": 39,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -705,7 +795,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 38,
+    "__docId__": 40,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -718,7 +808,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 39,
+    "__docId__": 41,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -731,7 +821,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 40,
+    "__docId__": 42,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -744,7 +834,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 41,
+    "__docId__": 43,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -757,7 +847,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 42,
+    "__docId__": 44,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -770,7 +860,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 43,
+    "__docId__": 45,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -783,7 +873,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 44,
+    "__docId__": 46,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -796,7 +886,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 45,
+    "__docId__": 47,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -809,7 +899,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 46,
+    "__docId__": 48,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -822,7 +912,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 47,
+    "__docId__": 49,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -835,7 +925,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 48,
+    "__docId__": 50,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -848,7 +938,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 49,
+    "__docId__": 51,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -861,7 +951,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 50,
+    "__docId__": 52,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -874,7 +964,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 51,
+    "__docId__": 53,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -887,7 +977,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 52,
+    "__docId__": 54,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -900,7 +990,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 53,
+    "__docId__": 55,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -913,7 +1003,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 54,
+    "__docId__": 56,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -926,7 +1016,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 55,
+    "__docId__": 57,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -939,7 +1029,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 56,
+    "__docId__": 58,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -952,7 +1042,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 57,
+    "__docId__": 59,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -965,7 +1055,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 59,
+    "__docId__": 61,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -978,7 +1068,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 60,
+    "__docId__": 62,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -991,7 +1081,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 61,
+    "__docId__": 63,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1004,7 +1094,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 62,
+    "__docId__": 64,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1017,7 +1107,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 63,
+    "__docId__": 65,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1030,7 +1120,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 64,
+    "__docId__": 66,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1043,7 +1133,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 65,
+    "__docId__": 67,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1056,7 +1146,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 66,
+    "__docId__": 68,
     "kind": "external",
     "static": true,
     "variation": null,

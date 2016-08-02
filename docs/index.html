@@ -35,6 +35,8 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-create">create</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-get">get</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getAll">getAll</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-push">push</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-remove">remove</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-sync">sync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-update">update</a></span></span></li>
 </ul>
@@ -43,6 +45,8 @@
 
 <div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="firebase-saga">firebase-saga</h1>
 <p>A library for connecting <code>redux-saga</code> middleware to <a href="https://firebase.google.com/">Firebase</a>.</p>
+<p><a href="https://www.npmjs.com/package/firebase-saga"><img src="https://img.shields.io/npm/v/firebase-saga.svg?style=flat-square" alt="version"></a>
+<a href="https://www.npmjs.com/package/firebase-saga"><img src="https://img.shields.io/npm/dt/firebase-saga.svg?style=flat-square" alt="version"></a></p>
 <h2 id="getting-started">Getting started</h2>
 <h3 id="install">Install</h3>
 <pre><code><code class="source-code prettyprint">$ npm install firebase-saga --save</code>
@@ -51,7 +55,7 @@
 <pre><code><code class="source-code prettyprint">import { takeEvery } from &apos;redux-saga&apos;;
 import { call, put, fork } from &apos;redux-saga/effects&apos;;
 import * as actions from &apos;../actions&apos;;
-import { getAll, get } from &apos;firebase-saga&apos;;
+import { getAll, get, create } from &apos;firebase-saga&apos;;
 
 function* fetchPosts() {
     try {
@@ -70,6 +74,24 @@ function* fetchPost() {
     }
     catch (error) {
         yield put(actions.fetchPostFailed(error));
+    }
+}
+
+function* createPost() {
+    try {
+        const formData = yield select(getFormData);
+        yield call(create, &apos;posts&apos;, () =&gt; ({
+                [`posts/${formData.id}`]: {
+                    title: formData.title,
+                    body: formData.body,
+                    timestamp: formData.timestamp
+                }
+            })
+        );
+        yield put(actions.postCreated());
+    }
+    catch (error) {
+        yield put(actions.postCreationFailed(error));
     }
 }
 
@@ -145,7 +167,23 @@ ReactDOM.render(
     &lt;/Provider&gt;,
     document.getElementById(&apos;root&apos;)
 );</code>
-</code></pre></div>
+</code></pre><h2 id="example">Example</h2>
+<ul>
+<li><a href="https://github.com/szaranger/firebase-saga/tree/master/examples/blog">Sample Application</a></li>
+</ul>
+<h2 id="documentation">Documentation</h2>
+<ul>
+<li><a href="http://szaranger.github.io/firebase-saga/docs/manual/overview.html">Overview</a></li>
+<li><a href="http://szaranger.github.io/firebase-saga/docs/manual/installation.html">Installation</a></li>
+<li><a href="http://szaranger.github.io/firebase-saga/docs/manual/tutorial.html">Tutorial</a></li>
+<li><a href="http://szaranger.github.io/firebase-saga/docs/manual/usage.html">Usage</a></li>
+<li><a href="http://szaranger.github.io/firebase-saga/docs/manual/configuration.html">Configuration</a></li>
+<li><a href="http://szaranger.github.io/firebase-saga/docs/manual/example.html">Example</a></li>
+<li><a href="http://szaranger.github.io/firebase-saga/docs/identifiers.html">Reference</a></li>
+<li><a href="http://szaranger.github.io/firebase-saga/docs/manual/faq.html">FAQ</a></li>
+<li><a href="http://szaranger.github.io/firebase-saga/docs/manual/changelog.html">Changelog</a></li>
+</ul>
+</div>
 </div>
 
 <footer class="footer">

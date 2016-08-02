@@ -30,7 +30,6 @@ class Blog extends React.Component {
                 <ul className="blog list-group">
                     {content}
                 </ul>
-                <button onClick={() => this.props.fetchPost(1) } className="btn btn-default">Get first post</button>
                 <button onClick={() => browserHistory.push('/new')} className="btn btn-primary">Create new post</button>
             </div>
 

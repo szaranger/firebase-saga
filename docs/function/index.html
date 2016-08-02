@@ -35,6 +35,8 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-create">create</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-get">get</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getAll">getAll</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-push">push</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-remove">remove</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-sync">sync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-update">update</a></span></span></li>
 </ul>
@@ -63,7 +65,8 @@
       <div>
         
         
-        
+        <div data-ice="description"><p>Saves new data to the database with <code>set()</code></p>
+</div>
       </div>
     </td>
     <td>
@@ -115,6 +118,58 @@
         
         
         <div data-ice="description"><p>Fetches entire snapshot of the database</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          <span data-ice="generator">*</span> <span data-ice="name"><span><a href="function/index.html#static-function-push">push</a></span></span><span data-ice="signature">(path: <span>*</span>, fn: <span>*</span>): <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Generates a new child location using a unique key</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          <span data-ice="generator">*</span> <span data-ice="name"><span><a href="function/index.html#static-function-remove">remove</a></span></span><span data-ice="signature">(path: <span>*</span>, key: <span>*</span>): <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Deletes a given child location using a unique key</p>
 </div>
       </div>
     </td>
@@ -189,14 +244,15 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber57">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber72">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {create} from &apos;<span><a href="file/src/index.js.html#lineNumber57">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {create} from &apos;<span><a href="file/src/index.js.html#lineNumber72">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
   
   
-  
+  <div data-ice="description"><p>Saves new data to the database with <code>set()</code></p>
+</div>
 
   
 
@@ -243,7 +299,23 @@
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">import { create } from &apos;firebase-saga&apos;;
+
+yield call(create, &apos;posts&apos;, () =&gt; ({
+             [`posts/1234`]: {
+                  title: &apos;My Second Post&apos;,
+                  body: &apos;Second post details&apos;,
+                  timestamp: +new Date
+              }
+          })
+);</code></pre>
+    </div>
+</div>
 
   
 
@@ -261,11 +333,11 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber33">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber31">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {get} from &apos;<span><a href="file/src/index.js.html#lineNumber33">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {get} from &apos;<span><a href="file/src/index.js.html#lineNumber31">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Fetches a record specified by the key from the database</p>
@@ -304,7 +376,7 @@
       <tr>
         <td class="return-type" data-ice="returnType"><span>*</span> | <span>any</span></td>
         <td class="return-desc" data-ice="returnDescription"><p>import { get } from &apos;firebase-saga&apos;;</p>
-<p>const posts = yield call(get, &apos;posts&apos;, &apos;1&apos;);</p>
+<p>const posts = yield call(get, &apos;posts&apos;, &apos;1234&apos;);</p>
 </td>
       </tr>
     </table>
@@ -336,11 +408,11 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber50">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber48">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getAll} from &apos;<span><a href="file/src/index.js.html#lineNumber50">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getAll} from &apos;<span><a href="file/src/index.js.html#lineNumber48">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Fetches entire snapshot of the database</p>
@@ -402,6 +474,175 @@ const posts = yield call(getAll, &apos;posts&apos;);</code></pre>
   
 </div>
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-function-push">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    <span data-ice="generator">*</span>
+    <span data-ice="name">push</span><span data-ice="signature">(path: <span>*</span>, fn: <span>*</span>): <span>*</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber112">source</a></span></span>
+    </span>
+  </h3>
+
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {push} from &apos;<span><a href="file/src/index.js.html#lineNumber112">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
+  
+  
+  <div data-ice="description"><p>Generates a new child location using a unique key</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">path</td>
+      <td data-ice="type"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">fn</td>
+      <td data-ice="type"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span>*</span></td>
+        
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">import { push } from &apos;firebase-saga&apos;;
+
+yield call(push, &apos;posts&apos;, () =&gt; ({
+            title: formData.title,
+            body: formData.body,
+            timestamp: formData.timestamp
+      })
+);</code></pre>
+    </div>
+</div>
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-function-remove">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    <span data-ice="generator">*</span>
+    <span data-ice="name">remove</span><span data-ice="signature">(path: <span>*</span>, key: <span>*</span>): <span>*</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber151">source</a></span></span>
+    </span>
+  </h3>
+
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {remove} from &apos;<span><a href="file/src/index.js.html#lineNumber151">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
+  
+  
+  <div data-ice="description"><p>Deletes a given child location using a unique key</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">path</td>
+      <td data-ice="type"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">key</td>
+      <td data-ice="type"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span>*</span></td>
+        
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">import { remove } from &apos;firebase-saga&apos;;
+
+yield call(remove, &apos;posts&apos;, &apos;1234&apos;)</code></pre>
+    </div>
+</div>
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="static-function-sync">
     <span class="access" data-ice="access">public</span>
     
@@ -412,11 +653,11 @@ const posts = yield call(getAll, &apos;posts&apos;);</code></pre>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber92">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber171">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {sync} from &apos;<span><a href="file/src/index.js.html#lineNumber92">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {sync} from &apos;<span><a href="file/src/index.js.html#lineNumber171">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -482,11 +723,11 @@ const posts = yield call(getAll, &apos;posts&apos;);</code></pre>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber69">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber84">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {update} from &apos;<span><a href="file/src/index.js.html#lineNumber69">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {update} from &apos;<span><a href="file/src/index.js.html#lineNumber84">firebase-saga/src/index.js</a></span>&apos;</code></pre></div>
   
   
   
