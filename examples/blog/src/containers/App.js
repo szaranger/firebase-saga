@@ -16,7 +16,7 @@ const App = ({ children }) => {
                 </div>
             </nav>
             <section className="container">
-                {children}
+                { children }
             </section>
         </div>
     )

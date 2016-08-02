@@ -25,7 +25,7 @@ class New extends React.Component {
                 <input type="text" ref="title" /><br/>
                 <label>Body</label><br/>
                 <textarea rows="5" ref="body" /><br />
-                <button onClick={() => this.onSubmit(this.refs) } className="btn btn-primary">Submit</button>
+                <button onClick={ () => this.onSubmit(this.refs) } className="btn btn-primary">Submit</button>
             </form>
         );
     }

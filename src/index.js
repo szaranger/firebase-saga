@@ -26,7 +26,7 @@ const newKey = (path) => firebase.database().ref().child(path).push().key;
  * @returns {*|any}
  * import { get } from 'firebase-saga';
  *
- * const posts = yield call(get, 'posts', '1');
+ * const posts = yield call(get, 'posts', '1234');
  */
 export function* get(path, key) {
 	const ref = firebase.database().ref(`${path}/${key}`);
@@ -116,6 +116,43 @@ export function* push(path, fn) {
     const ref = firebase.database().ref(path);
     const [ _, { error } ] = yield [
         call([ref, ref.push], payload, opts.handler),
+        take(opts)
+    ];
+    return error;
+}
+
+/**
+ * Deletes a given child location using a unique key
+ *
+ * @param path
+ * @param key
+ * @example
+ * import { push } from 'firebase-saga';
+ *
+ * yield call(push, 'posts', () => ({
+ *             title: formData.title,
+ *             body: formData.body,
+ *             timestamp: formData.timestamp
+ *       })
+ *);
+ */
+
+/**
+ * Deletes a given child location using a unique key
+ *
+ * @param path
+ * @param key
+ * @returns {*}
+ * @example
+ * import { remove } from 'firebase-saga';
+ *
+ * yield call(remove, 'posts', '1234')
+ */
+export function* remove(path, key) {
+    const opts = newOpts('error');
+    const ref = firebase.database().ref(`${path}/${key}`);
+    const [ _, { error } ] = yield [
+        call([ref, ref.remove], opts.handler),
         take(opts)
     ];
     return error;

@@ -1,8 +1,8 @@
-import {takeEvery} from 'redux-saga';
-import {call, put, fork, select} from 'redux-saga/effects';
+import { takeEvery } from 'redux-saga';
+import { call, put, fork, select } from 'redux-saga/effects';
 import * as actions from '../actions';
-import {getFormData} from '../reducers';
-import {getAll, get, create, push} from 'firebase-saga';
+import { getFormData, getId } from '../reducers';
+import { getAll, get, create, push, remove } from 'firebase-saga';
 
 function* fetchPosts() {
     try {
@@ -49,6 +49,18 @@ function* createPost() {
     }
 }
 
+function* deletePost() {
+    try {
+        const postId = yield select(getId);
+        yield call(remove, 'posts', postId)
+        yield put(actions.postDeleted());
+        yield fetchPosts();
+    }
+    catch (error) {
+        yield put(actions.postDeletionFailed(error));
+    }
+}
+
 function* watchFetchPosts() {
     yield* takeEvery(actions.FETCH_POSTS, fetchPosts);
 }
@@ -61,10 +73,15 @@ function* watchCreatePost() {
     yield* takeEvery(actions.CREATE_POST, createPost);
 }
 
+function* watchDeletePost() {
+    yield* takeEvery(actions.DELETE_POST, deletePost);
+}
+
 export default function* root() {
     yield [
         fork(watchFetchPosts),
         fork(watchFetchPost),
-        fork(watchCreatePost)
+        fork(watchCreatePost),
+        fork(watchDeletePost)
     ]
 }
