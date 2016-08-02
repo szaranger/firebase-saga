@@ -67,13 +67,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.create = create;
 	exports.update = update;
 	exports.push = push;
+	exports.remove = remove;
 	exports.sync = sync;
 
 	var _reduxSaga = __webpack_require__(9);
 
 	var _effects = __webpack_require__(8);
 
-	var _marked = [get, getAll, create, update, push, runSync, sync].map(regeneratorRuntime.mark);
+	var _marked = [get, getAll, create, update, push, remove, runSync, sync].map(regeneratorRuntime.mark);
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -106,7 +107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {*|any}
 	 * import { get } from 'firebase-saga';
 	 *
-	 * const posts = yield call(get, 'posts', '1');
+	 * const posts = yield call(get, 'posts', '1234');
 	 */
 	function get(path, key) {
 	  var ref, data;
@@ -307,42 +308,96 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, _marked[4], this);
 	}
 
-	function runSync(ref, eventType, creator) {
-	  var opts, _ref7, data;
+	/**
+	 * Deletes a given child location using a unique key
+	 *
+	 * @param path
+	 * @param key
+	 * @example
+	 * import { push } from 'firebase-saga';
+	 *
+	 * yield call(push, 'posts', () => ({
+	 *             title: formData.title,
+	 *             body: formData.body,
+	 *             timestamp: formData.timestamp
+	 *       })
+	 *);
+	 */
 
-	  return regeneratorRuntime.wrap(function runSync$(_context6) {
+	/**
+	 * Deletes a given child location using a unique key
+	 *
+	 * @param path
+	 * @param key
+	 * @returns {*}
+	 * @example
+	 * import { remove } from 'firebase-saga';
+	 *
+	 * yield call(remove, 'posts', '1234')
+	 */
+	function remove(path, key) {
+	  var opts, ref, _ref7, _ref8, _, error;
+
+	  return regeneratorRuntime.wrap(function remove$(_context6) {
 	    while (1) {
 	      switch (_context6.prev = _context6.next) {
 	        case 0:
-	          opts = newOpts();
-	          _context6.next = 3;
-	          return (0, _effects.call)([ref, ref.on], eventType, opts.handler);
+	          opts = newOpts('error');
+	          ref = firebase.database().ref(path + '/' + key);
+	          _context6.next = 4;
+	          return [(0, _effects.call)([ref, ref.remove], opts.handler), (0, _effects.take)(opts)];
 
-	        case 3:
-	          if (false) {
-	            _context6.next = 12;
-	            break;
-	          }
-
-	          _context6.next = 6;
-	          return (0, _effects.take)(opts);
-
-	        case 6:
+	        case 4:
 	          _ref7 = _context6.sent;
-	          data = _ref7.data;
-	          _context6.next = 10;
-	          return (0, _effects.put)(creator({ data: data }));
+	          _ref8 = _slicedToArray(_ref7, 2);
+	          _ = _ref8[0];
+	          error = _ref8[1].error;
+	          return _context6.abrupt('return', error);
 
-	        case 10:
-	          _context6.next = 3;
-	          break;
-
-	        case 12:
+	        case 9:
 	        case 'end':
 	          return _context6.stop();
 	      }
 	    }
 	  }, _marked[5], this);
+	}
+
+	function runSync(ref, eventType, creator) {
+	  var opts, _ref9, data;
+
+	  return regeneratorRuntime.wrap(function runSync$(_context7) {
+	    while (1) {
+	      switch (_context7.prev = _context7.next) {
+	        case 0:
+	          opts = newOpts();
+	          _context7.next = 3;
+	          return (0, _effects.call)([ref, ref.on], eventType, opts.handler);
+
+	        case 3:
+	          if (false) {
+	            _context7.next = 12;
+	            break;
+	          }
+
+	          _context7.next = 6;
+	          return (0, _effects.take)(opts);
+
+	        case 6:
+	          _ref9 = _context7.sent;
+	          data = _ref9.data;
+	          _context7.next = 10;
+	          return (0, _effects.put)(creator({ data: data }));
+
+	        case 10:
+	          _context7.next = 3;
+	          break;
+
+	        case 12:
+	        case 'end':
+	          return _context7.stop();
+	      }
+	    }
+	  }, _marked[6], this);
 	}
 
 	function sync(path) {
@@ -351,20 +406,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  var ref, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, type, action;
 
-	  return regeneratorRuntime.wrap(function sync$(_context7) {
+	  return regeneratorRuntime.wrap(function sync$(_context8) {
 	    while (1) {
-	      switch (_context7.prev = _context7.next) {
+	      switch (_context8.prev = _context8.next) {
 	        case 0:
 	          ref = firebase.database().ref(path).limitToLast(limit);
 	          _iteratorNormalCompletion = true;
 	          _didIteratorError = false;
 	          _iteratorError = undefined;
-	          _context7.prev = 4;
+	          _context8.prev = 4;
 	          _iterator = EVENT_TYPES[Symbol.iterator]();
 
 	        case 6:
 	          if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-	            _context7.next = 15;
+	            _context8.next = 15;
 	            break;
 	          }
 
@@ -372,58 +427,58 @@ return /******/ (function(modules) { // webpackBootstrap
 	          action = mapEventToAction[type];
 
 	          if (!(typeof action === 'function')) {
-	            _context7.next = 12;
+	            _context8.next = 12;
 	            break;
 	          }
 
-	          _context7.next = 12;
+	          _context8.next = 12;
 	          return (0, _effects.fork)(runSync, ref, type, action);
 
 	        case 12:
 	          _iteratorNormalCompletion = true;
-	          _context7.next = 6;
+	          _context8.next = 6;
 	          break;
 
 	        case 15:
-	          _context7.next = 21;
+	          _context8.next = 21;
 	          break;
 
 	        case 17:
-	          _context7.prev = 17;
-	          _context7.t0 = _context7['catch'](4);
+	          _context8.prev = 17;
+	          _context8.t0 = _context8['catch'](4);
 	          _didIteratorError = true;
-	          _iteratorError = _context7.t0;
+	          _iteratorError = _context8.t0;
 
 	        case 21:
-	          _context7.prev = 21;
-	          _context7.prev = 22;
+	          _context8.prev = 21;
+	          _context8.prev = 22;
 
 	          if (!_iteratorNormalCompletion && _iterator.return) {
 	            _iterator.return();
 	          }
 
 	        case 24:
-	          _context7.prev = 24;
+	          _context8.prev = 24;
 
 	          if (!_didIteratorError) {
-	            _context7.next = 27;
+	            _context8.next = 27;
 	            break;
 	          }
 
 	          throw _iteratorError;
 
 	        case 27:
-	          return _context7.finish(24);
+	          return _context8.finish(24);
 
 	        case 28:
-	          return _context7.finish(21);
+	          return _context8.finish(21);
 
 	        case 29:
 	        case 'end':
-	          return _context7.stop();
+	          return _context8.stop();
 	      }
 	    }
-	  }, _marked[6], this, [[4, 17, 21, 29], [22,, 24, 28]]);
+	  }, _marked[7], this, [[4, 17, 21, 29], [22,, 24, 28]]);
 	}
 
 /***/ },
