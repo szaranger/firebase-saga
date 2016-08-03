@@ -18,7 +18,7 @@ function* fetchPost() {
     try {
         const postId = yield select(getId);
         const posts = yield call(get, 'posts', postId);
-        yield put(actions.postReceived(posts));
+        yield put(actions.postReceived(Object.assign({}, posts, { id: postId })));
     }
     catch (error) {
         yield put(actions.fetchPostFailed(error));
@@ -50,6 +50,25 @@ function* createPost() {
     }
 }
 
+function* updatePost() {
+    try {
+        const formData = yield select(getFormData);
+        yield call(update, 'posts', () => ({
+                [`posts/${formData.id}`]: {
+                    title: formData.title,
+                    body: formData.body,
+                    timestamp: formData.timestamp
+                }
+            })
+        );
+
+        yield put(actions.postUpdated());
+    }
+    catch (error) {
+        yield put(actions.postUpdatingFailed(error));
+    }
+}
+
 function* deletePost() {
     try {
         const postId = yield select(getId);
@@ -74,6 +93,10 @@ function* watchCreatePost() {
     yield* takeEvery(actions.CREATE_POST, createPost);
 }
 
+function* watchUpdatePost() {
+    yield* takeEvery(actions.UPDATE_POST, updatePost);
+}
+
 function* watchDeletePost() {
     yield* takeEvery(actions.DELETE_POST, deletePost);
 }
@@ -83,6 +106,7 @@ export default function* root() {
         fork(watchFetchPosts),
         fork(watchFetchPost),
         fork(watchCreatePost),
+        fork(watchUpdatePost),
         fork(watchDeletePost)
     ]
 }

@@ -5,27 +5,30 @@ import { browserHistory } from 'react-router'
 import { v1 } from 'node-uuid';
 import * as actions from '../actions';
 
-class New extends React.Component {
+class Edit extends React.Component {
 
-    onSubmit({ title, body }) {
-        this.props.createPost({
-            id: v1(),
+    onSubmit(id, { title, body }) {
+        this.props.updatePost({
+            id: id,
             title: title.value,
             body: body.value,
             timestamp: +new Date
         });
 
-        browserHistory.push('/');
+        //browserHistory.push('/');
     }
 
     render() {
+        const { id, title, body } = this.props.post;
+
         return (
             <form className="list-group-item">
                 <label>Title</label><br/>
-                <input type="text" ref="title" /><br/>
+                <input type="text" ref="title" defaultValue={title} /><br/>
                 <label>Body</label><br/>
-                <textarea rows="5" ref="body" /><br />
-                <button onClick={ () => this.onSubmit(this.refs) } className="btn btn-primary">Submit</button>
+                <textarea rows="5" ref="body" defaultValue={body} /><br />
+                <button className="btn btn-default" onClick={ () => browserHistory.push('/') }>Cancel</button>
+                <button onClick={ () => this.onSubmit(id, this.refs) } className="btn btn-primary">Update</button>
             </form>
         );
     }
@@ -34,4 +37,4 @@ class New extends React.Component {
 export default connect(
     state => ({ posts: state.posts }),
     dispatch => bindActionCreators(actions, dispatch)
-)(New)
+)(Edit)

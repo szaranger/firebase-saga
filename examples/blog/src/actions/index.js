@@ -10,6 +10,10 @@ export const FETCH_POSTS_FAILED = 'FETCH_POSTS_FAILED';
 export const FETCH_POST_FAILED = 'FETCH_POST_FAILED';
 export const POST_CREATION_FAILED = 'POST_CREATION_FAILED';
 export const POST_DELETION_FAILED = 'POST_DELETION_FAILED';
+export const EDIT_POST = 'EDIT_POST';
+export const UPDATE_POST = 'UPDATE_POST';
+export const POST_UPDATED = 'POST_UPDATED';
+export const POST_UPDATING_FAILED = 'POST_UPDATING_FAILED';
 
 export function fetchPosts() {
   return {
@@ -88,6 +92,33 @@ export function postDeleted() {
 export function postDeletionFailed(error) {
     return {
         type: POST_DELETION_FAILED,
+        error
+    };
+}
+
+export function editPost(id) {
+    return {
+        type: EDIT_POST,
+        id
+    };
+}
+
+export function updatePost(formData) {
+    return {
+        type: UPDATE_POST,
+        formData
+    };
+}
+
+export function postUpdated() {
+    return {
+        type: POST_UPDATED
+    };
+}
+
+export function postUpdatingFailed(error) {
+    return {
+        type: POST_UPDATING_FAILED,
         error
     };
 }

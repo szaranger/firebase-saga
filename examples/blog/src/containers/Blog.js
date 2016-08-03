@@ -12,12 +12,12 @@ class Blog extends React.Component {
     }
 
     render() {
-        const { posts } = this.props.posts;
+        const { id, posts, isEditing } = this.props.posts;
 
         const content = posts ? (
             posts.map((post) => {
                 return (
-                    <Post key={post.timestamp} post={ post }/>
+                    <Post key={post.timestamp} post={ post } isEditing={ isEditing } />
                 )
             })
         ) : (
