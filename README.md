@@ -17,8 +17,9 @@ $ npm install firebase-saga --save
 
 Following functions are supported:
 
-| * create(path: *, fn: *): *                          | Saves new data to the database with set()               |
+| Function                                             | Description                                             |
 |------------------------------------------------------|---------------------------------------------------------|
+| * create(path: *, fn: *): *                          | Saves new data to the database with set()               |
 | * get(path: *, key: *): * | any                      | Fetches a record specified by the key from the database |
 | * getAll(path: *): * | any                           | Fetches entire snapshot of the database                 |
 | * push(path: *, fn: *): *                            | Generates a new child location using a unique key       |

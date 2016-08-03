@@ -88,6 +88,9 @@ export function* create(path, fn) {
  * @param key
  * @param payload
  * @returns {*}
+ * * import { update } from 'firebase-saga';
+ *
+ * yield call(update, 'posts', '1234', { 'Second Post', 'My seond post details', +new Date });
  */
 export function* update(path, key, payload) {
 	if (typeof payload === 'function') {
