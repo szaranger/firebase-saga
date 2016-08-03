@@ -1,3 +1,9 @@
+1.0.19 / 2016-07-04
+==================
+
+* Added **update** helper for updating existing child nodes 
+
+
 1.0.18 / 2016-07-02
 ==================
 

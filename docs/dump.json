@@ -10,7 +10,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "import { eventChannel } from 'redux-saga';\nimport { put, fork, call, take } from 'redux-saga/effects';\n\nconst EVENT_TYPES = ['child_added', 'child_removed'];\n\nconst newOpts = (name = 'data') => {\n\tconst opts = {};\n\tconst chan = eventChannel(emit => {\n\t\topts.handler = obj => {\n\t\t\temit({ [name]: obj });\n\t\t};\n\t\treturn () => {};\n\t});\n\n\tchan.handler = opts.handler;\n\treturn chan;\n};\n\nconst newKey = (path) => firebase.database().ref().child(path).push().key;\n\n/**\n * Fetches a record specified by the key from the database\n *\n * @param path\n * @param key\n * @returns {*|any}\n * import { get } from 'firebase-saga';\n *\n * const posts = yield call(get, 'posts', '1234');\n */\nexport function* get(path, key) {\n\tconst ref = firebase.database().ref(`${path}/${key}`);\n\tconst data = yield call([ref, ref.once], 'value');\n\n\treturn data.val();\n}\n\n/**\n * Fetches entire snapshot of the database\n *\n * @param path\n * @returns {*|any}\n * @example\n * import { getAll } from 'firebase-saga';\n *\n * const posts = yield call(getAll, 'posts');\n */\nexport function* getAll(path) {\n\tconst ref = firebase.database().ref(path);\n\tconst data = yield call([ref, ref.once], 'value');\n\n\treturn data.val();\n}\n\n/**\n * Saves new data to the database with `set()`\n *\n * @param path\n * @param fn\n * @example\n * import { create } from 'firebase-saga';\n *\n * yield call(create, 'posts', () => ({\n *              [`posts/1234`]: {\n *                   title: 'My Second Post',\n *                   body: 'Second post details',\n *                   timestamp: +new Date\n *               }\n *           })\n *);\n */\nexport function* create(path, fn) {\n\tconst key = yield call(newKey, path);\n\tconst payload = yield call(fn, key);\n\tconst opts = newOpts('error');\n\tconst ref = firebase.database().ref();\n\tconst [ _, { error } ] = yield [\n\t\tcall([ref, ref.update], payload, opts.handler),\n\t\ttake(opts)\n\t];\n\treturn error;\n}\n\nexport function* update(path, key, payload) {\n\tif (typeof payload === 'function') {\n\t\tpayload = yield call(payload);\n\t}\n\tconst opts = newOpts('error');\n\tconst ref = firebase.database().ref(`${path}/${key}`);\n\tconst [ _, { error } ] = yield [\n\t\tcall([ref, ref.update], payload, opts.handler),\n\t\ttake(opts)\n\t];\n\treturn error;\n}\n\n/**\n * Generates a new child location using a unique key\n *\n * @param path\n * @param fn\n * @example\n * import { push } from 'firebase-saga';\n *\n * yield call(push, 'posts', () => ({\n *             title: formData.title,\n *             body: formData.body,\n *             timestamp: formData.timestamp\n *       })\n *);\n */\nexport function* push(path, fn) {\n    const key = yield call(newKey, path);\n    const payload = yield call(fn, key);\n    const opts = newOpts('error');\n    const ref = firebase.database().ref(path);\n    const [ _, { error } ] = yield [\n        call([ref, ref.push], payload, opts.handler),\n        take(opts)\n    ];\n    return error;\n}\n\n/**\n * Deletes a given child location using a unique key\n *\n * @param path\n * @param key\n * @example\n * import { push } from 'firebase-saga';\n *\n * yield call(push, 'posts', () => ({\n *             title: formData.title,\n *             body: formData.body,\n *             timestamp: formData.timestamp\n *       })\n *);\n */\n\n/**\n * Deletes a given child location using a unique key\n *\n * @param path\n * @param key\n * @returns {*}\n * @example\n * import { remove } from 'firebase-saga';\n *\n * yield call(remove, 'posts', '1234')\n */\nexport function* remove(path, key) {\n    const opts = newOpts('error');\n    const ref = firebase.database().ref(`${path}/${key}`);\n    const [ _, { error } ] = yield [\n        call([ref, ref.remove], opts.handler),\n        take(opts)\n    ];\n    return error;\n}\n\nfunction* runSync(ref, eventType, creator) {\n\tconst opts = newOpts();\n\tyield call([ref, ref.on], eventType, opts.handler);\n\n\twhile (true) {\n\t\tconst { data } = yield take(opts);\n\t\tyield put(creator({ data }));\n\t}\n}\n\nexport function* sync(path, mapEventToAction = {}, limit = 20) {\n\tconst ref = firebase.database().ref(path).limitToLast(limit);\n\n\tfor (let type of EVENT_TYPES) {\n\t\tconst action = mapEventToAction[type];\n\n\t\tif (typeof action === 'function') {\n\t\t\tyield fork(runSync, ref, type, action);\n\t\t}\n\t}\n}\n"
+    "content": "import { eventChannel } from 'redux-saga';\nimport { put, fork, call, take } from 'redux-saga/effects';\n\nconst EVENT_TYPES = ['child_added', 'child_removed'];\n\nconst newOpts = (name = 'data') => {\n\tconst opts = {};\n\tconst chan = eventChannel(emit => {\n\t\topts.handler = obj => {\n\t\t\temit({ [name]: obj });\n\t\t};\n\t\treturn () => {};\n\t});\n\n\tchan.handler = opts.handler;\n\treturn chan;\n};\n\nconst newKey = (path) => firebase.database().ref().child(path).push().key;\n\n/**\n * Fetches a record specified by the key from the database\n *\n * @param path\n * @param key\n * @returns {*|any}\n * import { get } from 'firebase-saga';\n *\n * const posts = yield call(get, 'posts', '1234');\n */\nexport function* get(path, key) {\n\tconst ref = firebase.database().ref(`${path}/${key}`);\n\tconst data = yield call([ref, ref.once], 'value');\n\n\treturn data.val();\n}\n\n/**\n * Fetches entire snapshot of the database\n *\n * @param path\n * @returns {*|any}\n * @example\n * import { getAll } from 'firebase-saga';\n *\n * const posts = yield call(getAll, 'posts');\n */\nexport function* getAll(path) {\n\tconst ref = firebase.database().ref(path);\n\tconst data = yield call([ref, ref.once], 'value');\n\n\treturn data.val();\n}\n\n/**\n * Saves new data to the database with `set()`\n *\n * @param path\n * @param fn\n * @example\n * import { create } from 'firebase-saga';\n *\n * yield call(create, 'posts', () => ({\n *              [`posts/1234`]: {\n *                   title: 'My Second Post',\n *                   body: 'Second post details',\n *                   timestamp: +new Date\n *               }\n *           })\n *);\n */\nexport function* create(path, fn) {\n\tconst key = yield call(newKey, path);\n\tconst payload = yield call(fn, key);\n\tconst opts = newOpts('error');\n\tconst ref = firebase.database().ref();\n\tconst [ _, { error } ] = yield [\n\t\tcall([ref, ref.update], payload, opts.handler),\n\t\ttake(opts)\n\t];\n\treturn error;\n}\n\n/**\n * Updates existing data in the database with `update()`\n *\n * @param path\n * @param key\n * @param payload\n * @returns {*}\n */\nexport function* update(path, key, payload) {\n\tif (typeof payload === 'function') {\n\t\tpayload = yield call(payload);\n\t}\n\tconst opts = newOpts('error');\n\tconst ref = firebase.database().ref(`${path}/${key}`);\n\tconst [ _, { error } ] = yield [\n\t\tcall([ref, ref.update], payload, opts.handler),\n\t\ttake(opts)\n\t];\n\treturn error;\n}\n\n/**\n * Generates a new child location using a unique key\n *\n * @param path\n * @param fn\n * @example\n * import { push } from 'firebase-saga';\n *\n * yield call(push, 'posts', () => ({\n *             title: formData.title,\n *             body: formData.body,\n *             timestamp: formData.timestamp\n *       })\n *);\n */\nexport function* push(path, fn) {\n    const key = yield call(newKey, path);\n    const payload = yield call(fn, key);\n    const opts = newOpts('error');\n    const ref = firebase.database().ref(path);\n    const [ _, { error } ] = yield [\n        call([ref, ref.push], payload, opts.handler),\n        take(opts)\n    ];\n    return error;\n}\n\n/**\n * Deletes a given child location using a unique key\n *\n * @param path\n * @param key\n * @example\n * import { push } from 'firebase-saga';\n *\n * yield call(push, 'posts', () => ({\n *             title: formData.title,\n *             body: formData.body,\n *             timestamp: formData.timestamp\n *       })\n *);\n */\n\n/**\n * Deletes a given child location using a unique key\n *\n * @param path\n * @param key\n * @returns {*}\n * @example\n * import { remove } from 'firebase-saga';\n *\n * yield call(remove, 'posts', '1234')\n */\nexport function* remove(path, key) {\n    const opts = newOpts('error');\n    const ref = firebase.database().ref(`${path}/${key}`);\n    const [ _, { error } ] = yield [\n        call([ref, ref.remove], opts.handler),\n        take(opts)\n    ];\n    return error;\n}\n\nfunction* runSync(ref, eventType, creator) {\n\tconst opts = newOpts();\n\tyield call([ref, ref.on], eventType, opts.handler);\n\n\twhile (true) {\n\t\tconst { data } = yield take(opts);\n\t\tyield put(creator({ data }));\n\t}\n}\n\nexport function* sync(path, mapEventToAction = {}, limit = 20) {\n\tconst ref = firebase.database().ref(path).limitToLast(limit);\n\n\tfor (let type of EVENT_TYPES) {\n\t\tconst action = mapEventToAction[type];\n\n\t\tif (typeof action === 'function') {\n\t\t\tyield fork(runSync, ref, type, action);\n\t\t}\n\t}\n}\n"
   },
   {
     "__docId__": 1,
@@ -232,33 +232,53 @@
     "export": true,
     "importPath": "firebase-saga/src/index.js",
     "importStyle": "{update}",
-    "description": null,
-    "lineNumber": 84,
-    "undocument": true,
+    "description": "Updates existing data in the database with `update()`",
+    "lineNumber": 92,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{*}"
+      }
+    ],
     "params": [
       {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
         "name": "path",
-        "types": [
-          "*"
-        ]
+        "description": ""
       },
       {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
         "name": "key",
-        "types": [
-          "*"
-        ]
+        "description": ""
       },
       {
-        "name": "payload",
+        "nullable": null,
         "types": [
           "*"
-        ]
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "payload",
+        "description": ""
       }
     ],
     "return": {
+      "nullable": null,
       "types": [
         "*"
-      ]
+      ],
+      "spread": false,
+      "description": ""
     },
     "generator": true
   },
@@ -278,7 +298,7 @@
     "examples": [
       "import { push } from 'firebase-saga';\n\nyield call(push, 'posts', () => ({\n            title: formData.title,\n            body: formData.body,\n            timestamp: formData.timestamp\n      })\n);"
     ],
-    "lineNumber": 112,
+    "lineNumber": 120,
     "params": [
       {
         "nullable": null,
@@ -324,7 +344,7 @@
     "examples": [
       "import { remove } from 'firebase-saga';\n\nyield call(remove, 'posts', '1234')"
     ],
-    "lineNumber": 151,
+    "lineNumber": 159,
     "unknown": [
       {
         "tagName": "@returns",
@@ -376,7 +396,7 @@
     "importPath": "firebase-saga/src/index.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 161,
+    "lineNumber": 169,
     "undocument": true,
     "params": [
       {
@@ -413,7 +433,7 @@
     "importPath": "firebase-saga/src/index.js",
     "importStyle": "{sync}",
     "description": null,
-    "lineNumber": 171,
+    "lineNumber": 179,
     "undocument": true,
     "params": [
       {

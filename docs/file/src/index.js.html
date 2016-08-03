@@ -127,6 +127,14 @@ export function* create(path, fn) {
 	return error;
 }
 
+/**
+ * Updates existing data in the database with `update()`
+ *
+ * @param path
+ * @param key
+ * @param payload
+ * @returns {*}
+ */
 export function* update(path, key, payload) {
 	if (typeof payload === &apos;function&apos;) {
 		payload = yield call(payload);

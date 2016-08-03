@@ -3,6 +3,7 @@ import { call, put, fork, select } from 'redux-saga/effects';
 import * as actions from '../actions';
 import { getFormData, getId } from '../reducers';
 import { getAll, get, create, push, remove } from 'firebase-saga';
+import { update } from './firebase-helper';
 
 function* fetchPosts() {
     try {
@@ -27,15 +28,9 @@ function* fetchPost() {
 
 function* createPost() {
     try {
-        const formData = yield select(getFormData);
-        yield call(create, 'posts', () => ({
-                [`posts/${formData.id}`]: {
-                    title: formData.title,
-                    body: formData.body,
-                    timestamp: formData.timestamp
-                }
-            })
-        );
+        const { id, title, body, timestamp } = yield select(getFormData);
+
+        yield call(create, 'posts', () => ({[`posts/${id}`]: { title, body, timestamp }}));
         // Generates a new child location using a unique key
         // yield call(push, 'posts', () => ({
         //             title: formData.title,
@@ -52,16 +47,9 @@ function* createPost() {
 
 function* updatePost() {
     try {
-        const formData = yield select(getFormData);
-        yield call(update, 'posts', () => ({
-                [`posts/${formData.id}`]: {
-                    title: formData.title,
-                    body: formData.body,
-                    timestamp: formData.timestamp
-                }
-            })
-        );
+        const { id, title, body, timestamp } = yield select(getFormData);
 
+        yield call(update, 'posts', id, { title, body, timestamp });
         yield put(actions.postUpdated());
     }
     catch (error) {

@@ -13,6 +13,19 @@ A library for connecting `redux-saga` middleware to <a href="https://firebase.go
 $ npm install firebase-saga --save
 ```
 
+### API
+
+Following functions are supported:
+
+| * create(path: *, fn: *): *                          | Saves new data to the database with set()               |
+|------------------------------------------------------|---------------------------------------------------------|
+| * get(path: *, key: *): * | any                      | Fetches a record specified by the key from the database |
+| * getAll(path: *): * | any                           | Fetches entire snapshot of the database                 |
+| * push(path: *, fn: *): *                            | Generates a new child location using a unique key       |
+| * remove(path: *, key: *): *                         | Deletes a given child location using a unique key       |
+| * update(path: *, key: *, payload: *): *             | Updates existing data in the database with update()     |
+| * sync(path: *, mapEventToAction: {}, limit: number) |                                                         |
+
 ### Integrate Firebase with Sagas
 
 The saga can be like the following:
