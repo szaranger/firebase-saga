@@ -19,7 +19,7 @@ const posts = (state = { posts: [] }, action) => {
                 isSyncing: false
             };
         case constants.SYNC_POST_ADDED:
-            const post = {...action.post, id: action.post.key};
+            const post = {...action.post.value, id: action.post.key};
             const syncdPosts = state.isSyncing ? state.posts.concat(post) : [post];
 
             return {
@@ -29,7 +29,7 @@ const posts = (state = { posts: [] }, action) => {
             };
         case constants.SYNC_POST_REMOVED:
             return {
-                posts: state.posts.pop({...action.post, id: action.post.key}),
+                posts: state.posts.pop({...action.post.value, id: action.post.key}),
                 ...state
             };
         case constants.POST_RECEIVED:

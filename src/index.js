@@ -180,7 +180,7 @@ function* runSync(ref, eventType, actionCreator) {
 
     while (true) {
         const { data } = yield take(opts);
-        yield put(actionCreator({ key: data.key, ...data.val() }));
+        yield put(actionCreator({ key: data.key, value: data.val() }));
     }
 }
 
