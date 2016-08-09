@@ -13,11 +13,12 @@ class Blog extends React.Component {
 
     render() {
         const { id, posts, isEditing } = this.props.posts;
+        const { syncPosts } = this.props;
 
         const content = posts ? (
             posts.map((post) => {
                 return (
-                    <Post key={post.timestamp} post={ post } isEditing={ isEditing } />
+                    <Post key={ post.timestamp } post={ post } isEditing={ isEditing } />
                 )
             })
         ) : (
@@ -30,9 +31,9 @@ class Blog extends React.Component {
                 <ul className="blog list-group">
                     {content}
                 </ul>
-                <button onClick={() => browserHistory.push('/new')} className="btn btn-primary">Create new post</button>
+                <button onClick={() => browserHistory.push('/new')} className="btn btn-primary">New</button>
+                <button onClick={() => syncPosts() } className="btn btn-primary">Enable Sync</button>
             </div>
-
         )
     }
 }

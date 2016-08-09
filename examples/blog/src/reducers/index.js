@@ -15,7 +15,22 @@ const posts = (state = { posts: [] }, action) => {
                 posts: Object.keys(posts).map(
                     (key) => Object.assign({}, {id: key}, posts[key])
                 ),
-                isSinglePost: false
+                isSinglePost: false,
+                isSyncing: false
+            };
+        case constants.SYNC_POST_ADDED:
+            const post = {...action.post, id: action.post.key};
+            const syncdPosts = state.isSyncing ? state.posts.concat(post) : [post];
+
+            return {
+                posts: syncdPosts,
+                isSinglePost: false,
+                isSyncing: true
+            };
+        case constants.SYNC_POST_REMOVED:
+            return {
+                posts: state.posts.pop({...action.post, id: action.post.key}),
+                ...state
             };
         case constants.POST_RECEIVED:
             return {

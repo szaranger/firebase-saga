@@ -1,12 +1,17 @@
 export const FETCH_POSTS = 'FETCH_POSTS';
+export const SYNC_POSTS = 'SYNC_POSTS';
+export const SYNC_POST_ADDED = 'SYNC_POST_ADDED';
+export const SYNC_POST_REMOVED = 'SYNC_POST_REMOVED';
 export const FETCH_POST = 'FETCH_POST';
 export const CREATE_POST = 'CREATE_POST';
 export const DELETE_POST = 'DELETE_POST';
 export const POSTS_RECEIVED = 'POSTS_RECEIVED';
+export const POSTS_SYNCD = 'POSTS_SYNCD';
 export const POST_RECEIVED = 'POST_RECEIVED';
 export const POST_CREATED = 'POST_RECEIVED';
 export const POST_DELETED = 'POST_DELETED';
 export const FETCH_POSTS_FAILED = 'FETCH_POSTS_FAILED';
+export const SYNC_POSTS_FAILED = 'SYNC_POSTS_FAILED';
 export const FETCH_POST_FAILED = 'FETCH_POST_FAILED';
 export const POST_CREATION_FAILED = 'POST_CREATION_FAILED';
 export const POST_DELETION_FAILED = 'POST_DELETION_FAILED';
@@ -31,6 +36,40 @@ export function postsReceived(posts) {
 export function fetchPostsFailed(error) {
     return {
         type: FETCH_POSTS_FAILED,
+        error
+    };
+}
+
+export function syncPosts() {
+    return {
+        type: SYNC_POSTS
+    };
+}
+
+export function syncPostAdded(post) {
+    return {
+        type: SYNC_POST_ADDED,
+        post
+    };
+}
+
+export function syncPostRemoved(post) {
+    return {
+        type: SYNC_POST_REMOVED,
+        post
+    };
+}
+
+export function postsSyncd(posts) {
+    return {
+        type: POSTS_SYNCD,
+        posts
+    };
+}
+
+export function syncPostsFailed(error) {
+    return {
+        type: SYNC_POSTS_FAILED,
         error
     };
 }

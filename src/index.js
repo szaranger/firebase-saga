@@ -3,6 +3,11 @@ import { put, fork, call, take } from 'redux-saga/effects';
 
 const EVENT_TYPES = ['child_added', 'child_removed'];
 
+export const CHILD_ADDED = 'child_added';
+export const CHILD_REMOVED = 'child_removed';
+export const CHILD_CHANGED = 'child_changed';
+export const CHILD_MOVED = 'child_moved';
+
 const newOpts = (name = 'data') => {
 	const opts = {};
 	const chan = eventChannel(emit => {
@@ -169,24 +174,40 @@ export function* remove(path, key) {
     return error;
 }
 
-function* runSync(ref, eventType, creator) {
-	const opts = newOpts();
-	yield call([ref, ref.on], eventType, opts.handler);
+function* runSync(ref, eventType, actionCreator) {
+    const opts = newOpts();
+    yield call([ref, ref.on], eventType, opts.handler);
 
-	while (true) {
-		const { data } = yield take(opts);
-		yield put(creator({ data }));
-	}
+    while (true) {
+        const { data } = yield take(opts);
+        yield put(actionCreator({ key: data.key, ...data.val() }));
+    }
 }
 
+/**
+ * Gets fired every time a child added, remove, changed, or moved
+ *
+ * @param path
+ * @param mapEventToAction
+ * @param limit
+ * @example
+ * import { sync, CHILD_ADDED, CHILD_REMOVED } from 'firebase-saga';
+ *
+ *function* syncPosts() {
+ *   yield fork(sync, 'posts', {
+ *       [CHILD_ADDED]: actions.syncPostAdded,
+ *       [CHILD_REMOVED]: actions.syncPostRemoved
+ *   });
+ *}
+ */
 export function* sync(path, mapEventToAction = {}, limit = 20) {
-	const ref = firebase.database().ref(path).limitToLast(limit);
+    const ref = firebase.database().ref(path).limitToLast(limit);
 
-	for (let type of EVENT_TYPES) {
-		const action = mapEventToAction[type];
+    for (let type of EVENT_TYPES) {
+        const action = mapEventToAction[type];
 
-		if (typeof action === 'function') {
-			yield fork(runSync, ref, type, action);
-		}
-	}
+        if (typeof action === 'function') {
+            yield fork(runSync, ref, type, action);
+        }
+    }
 }
