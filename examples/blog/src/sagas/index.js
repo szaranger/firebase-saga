@@ -2,8 +2,7 @@ import { takeEvery } from 'redux-saga';
 import { call, put, fork, select } from 'redux-saga/effects';
 import * as actions from '../actions';
 import { getFormData, getId } from '../reducers';
-import { getAll, get, create, push, remove, update,  } from 'firebase-saga';
-import {sync, CHILD_ADDED, CHILD_REMOVED} from './firebase-helper';
+import { getAll, get, create, push, remove, update, sync, CHILD_ADDED, CHILD_REMOVED } from 'firebase-saga';
 
 function* fetchPosts() {
     try {

@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fc8a2512-1b54-4d4d-a2d4-f69a0c55a75a" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dist/ReactProxy.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/modules/index.js" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/blog/src/reducers/index.js" afterPath="$PROJECT_DIR$/examples/blog/src/reducers/index.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/blog/src/sagas/index.js" afterPath="$PROJECT_DIR$/examples/blog/src/sagas/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/index.js" afterPath="$PROJECT_DIR$/src/index.js" />
     </list>
     <ignored path="firebase-saga.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -60,10 +55,10 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/index.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
+                <state vertical-scroll-proportion="0.6118568">
                   <caret line="193" column="68" selection-start-line="193" selection-start-column="68" selection-end-line="193" selection-end-column="68" />
                   <folding>
                     <marker date="1470753332000" expanded="true" signature="3301:3316" placeholder="{...}" />
@@ -92,11 +87,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/examples/blog/src/reducers/index.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.45302013">
-                  <caret line="27" column="31" selection-start-line="27" selection-start-column="31" selection-end-line="27" selection-end-column="31" />
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="25" column="34" selection-start-line="25" selection-start-column="34" selection-end-line="25" selection-end-column="34" />
                   <folding />
                 </state>
               </provider>
@@ -136,11 +131,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/examples/blog/src/sagas/index.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="28" column="82" selection-start-line="28" selection-start-column="82" selection-end-line="28" selection-end-column="82" />
+                <state vertical-scroll-proportion="0.06711409">
+                  <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="108" />
                   <folding />
                 </state>
               </provider>
@@ -214,11 +209,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="firebase-helper.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="firebase-helper.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/examples/blog/src/sagas/firebase-helper.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.4440716">
-                  <caret line="144" column="56" selection-start-line="144" selection-start-column="56" selection-end-line="144" selection-end-column="56" />
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="145" column="5" selection-start-line="145" selection-start-column="5" selection-end-line="145" selection-end-column="5" />
                   <folding>
                     <element signature="n#!!doc;n#create#0" expanded="false" />
                     <element signature="n#!!block;n#create#0" expanded="false" />
@@ -257,9 +252,9 @@
         <option value="$PROJECT_DIR$/examples/blog/package.json" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/src/index.js" />
-        <option value="$PROJECT_DIR$/examples/blog/src/sagas/index.js" />
         <option value="$PROJECT_DIR$/examples/blog/src/reducers/index.js" />
         <option value="$PROJECT_DIR$/examples/blog/src/sagas/firebase-helper.js" />
+        <option value="$PROJECT_DIR$/examples/blog/src/sagas/index.js" />
       </list>
     </option>
   </component>
@@ -1048,14 +1043,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/blog/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-16.25">
-          <caret line="26" column="22" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CHANGELOG.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;MultiMarkdownPreviewEditor]">
         <state split_layout="FIRST">
@@ -1084,16 +1071,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="193" column="68" selection-start-line="193" selection-start-column="68" selection-end-line="193" selection-end-column="68" />
-          <folding>
-            <marker date="1470753332000" expanded="true" signature="3301:3316" placeholder="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/examples/blog/src/actions/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1118,31 +1095,49 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/examples/blog/src/sagas/firebase-helper.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="145" column="5" selection-start-line="145" selection-start-column="5" selection-end-line="145" selection-end-column="5" />
+          <folding>
+            <element signature="n#!!doc;n#create#0" expanded="false" />
+            <element signature="n#!!block;n#create#0" expanded="false" />
+            <element signature="n#!!block;n#update#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/examples/blog/src/reducers/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.45302013">
-          <caret line="27" column="31" selection-start-line="27" selection-start-column="31" selection-end-line="27" selection-end-column="31" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="25" column="34" selection-start-line="25" selection-start-column="34" selection-end-line="25" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6118568">
+          <caret line="193" column="68" selection-start-line="193" selection-start-column="68" selection-end-line="193" selection-end-column="68" />
+          <folding>
+            <marker date="1470753332000" expanded="true" signature="3301:3316" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/blog/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.25">
+          <caret line="26" column="22" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/examples/blog/src/sagas/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="28" column="82" selection-start-line="28" selection-start-column="82" selection-end-line="28" selection-end-column="82" />
+        <state vertical-scroll-proportion="0.06711409">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="108" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/blog/src/sagas/firebase-helper.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4440716">
-          <caret line="144" column="56" selection-start-line="144" selection-start-column="56" selection-end-line="144" selection-end-column="56" />
-          <folding>
-            <element signature="n#!!doc;n#create#0" expanded="false" />
-            <element signature="n#!!block;n#create#0" expanded="false" />
-            <element signature="n#!!block;n#update#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
