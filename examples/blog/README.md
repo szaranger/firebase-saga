@@ -28,3 +28,11 @@ You can import a JSON file similar to following into **Firebase**.
   }
 }
 ```
+
+### Running
+
+```
+$ npm start
+```
+
+Open a web browser and run the URL shown in the console.
