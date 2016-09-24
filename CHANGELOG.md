@@ -1,3 +1,8 @@
+1.1.1 / 2016-09-24
+==================
+
+* Updated **sync** to remove default limit and pass **limit** as an option
+
 1.1.0 / 2016-07-10
 ==================
 

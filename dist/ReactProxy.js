@@ -57,9 +57,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
-	exports.CHILD_MOVED = exports.CHILD_CHANGED = exports.CHILD_REMOVED = exports.CHILD_ADDED = undefined;
+	exports.VALUE = exports.CHILD_MOVED = exports.CHILD_CHANGED = exports.CHILD_REMOVED = exports.CHILD_ADDED = undefined;
 
 	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
@@ -79,30 +79,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-	var EVENT_TYPES = ['child_added', 'child_removed'];
-
 	var CHILD_ADDED = exports.CHILD_ADDED = 'child_added';
 	var CHILD_REMOVED = exports.CHILD_REMOVED = 'child_removed';
 	var CHILD_CHANGED = exports.CHILD_CHANGED = 'child_changed';
 	var CHILD_MOVED = exports.CHILD_MOVED = 'child_moved';
+	var VALUE = exports.VALUE = 'value';
+
+	var EVENT_TYPES = [CHILD_ADDED, CHILD_REMOVED, CHILD_CHANGED, CHILD_MOVED, VALUE];
 
 	var newOpts = function newOpts() {
-	  var name = arguments.length <= 0 || arguments[0] === undefined ? 'data' : arguments[0];
+	    var name = arguments.length <= 0 || arguments[0] === undefined ? 'data' : arguments[0];
 
-	  var opts = {};
-	  var chan = (0, _reduxSaga.eventChannel)(function (emit) {
-	    opts.handler = function (obj) {
-	      emit(_defineProperty({}, name, obj));
-	    };
-	    return function () {};
-	  });
+	    var opts = {};
+	    var chan = (0, _reduxSaga.eventChannel)(function (emit) {
+	        opts.handler = function (obj) {
+	            emit(_defineProperty({}, name, obj));
+	        };
+	        return function () {};
+	    });
 
-	  chan.handler = opts.handler;
-	  return chan;
+	    chan.handler = opts.handler;
+	    return chan;
 	};
 
 	var newKey = function newKey(path) {
-	  return firebase.database().ref().child(path).push().key;
+	    return firebase.database().ref().child(path).push().key;
 	};
 
 	/**
@@ -116,25 +117,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * const posts = yield call(get, 'posts', '1234');
 	 */
 	function get(path, key) {
-	  var ref, data;
-	  return regeneratorRuntime.wrap(function get$(_context) {
-	    while (1) {
-	      switch (_context.prev = _context.next) {
-	        case 0:
-	          ref = firebase.database().ref(path + '/' + key);
-	          _context.next = 3;
-	          return (0, _effects.call)([ref, ref.once], 'value');
+	    var ref, data;
+	    return regeneratorRuntime.wrap(function get$(_context) {
+	        while (1) {
+	            switch (_context.prev = _context.next) {
+	                case 0:
+	                    ref = firebase.database().ref(path + '/' + key);
+	                    _context.next = 3;
+	                    return (0, _effects.call)([ref, ref.once], 'value');
 
-	        case 3:
-	          data = _context.sent;
-	          return _context.abrupt('return', data.val());
+	                case 3:
+	                    data = _context.sent;
+	                    return _context.abrupt('return', data.val());
 
-	        case 5:
-	        case 'end':
-	          return _context.stop();
-	      }
-	    }
-	  }, _marked[0], this);
+	                case 5:
+	                case 'end':
+	                    return _context.stop();
+	            }
+	        }
+	    }, _marked[0], this);
 	}
 
 	/**
@@ -148,25 +149,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * const posts = yield call(getAll, 'posts');
 	 */
 	function getAll(path) {
-	  var ref, data;
-	  return regeneratorRuntime.wrap(function getAll$(_context2) {
-	    while (1) {
-	      switch (_context2.prev = _context2.next) {
-	        case 0:
-	          ref = firebase.database().ref(path);
-	          _context2.next = 3;
-	          return (0, _effects.call)([ref, ref.once], 'value');
+	    var ref, data;
+	    return regeneratorRuntime.wrap(function getAll$(_context2) {
+	        while (1) {
+	            switch (_context2.prev = _context2.next) {
+	                case 0:
+	                    ref = firebase.database().ref(path);
+	                    _context2.next = 3;
+	                    return (0, _effects.call)([ref, ref.once], 'value');
 
-	        case 3:
-	          data = _context2.sent;
-	          return _context2.abrupt('return', data.val());
+	                case 3:
+	                    data = _context2.sent;
+	                    return _context2.abrupt('return', data.val());
 
-	        case 5:
-	        case 'end':
-	          return _context2.stop();
-	      }
-	    }
-	  }, _marked[1], this);
+	                case 5:
+	                case 'end':
+	                    return _context2.stop();
+	            }
+	        }
+	    }, _marked[1], this);
 	}
 
 	/**
@@ -187,40 +188,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *);
 	 */
 	function create(path, fn) {
-	  var key, payload, opts, ref, _ref, _ref2, _, error;
+	    var key, payload, opts, ref, _ref, _ref2, _, error;
 
-	  return regeneratorRuntime.wrap(function create$(_context3) {
-	    while (1) {
-	      switch (_context3.prev = _context3.next) {
-	        case 0:
-	          _context3.next = 2;
-	          return (0, _effects.call)(newKey, path);
+	    return regeneratorRuntime.wrap(function create$(_context3) {
+	        while (1) {
+	            switch (_context3.prev = _context3.next) {
+	                case 0:
+	                    _context3.next = 2;
+	                    return (0, _effects.call)(newKey, path);
 
-	        case 2:
-	          key = _context3.sent;
-	          _context3.next = 5;
-	          return (0, _effects.call)(fn, key);
+	                case 2:
+	                    key = _context3.sent;
+	                    _context3.next = 5;
+	                    return (0, _effects.call)(fn, key);
 
-	        case 5:
-	          payload = _context3.sent;
-	          opts = newOpts('error');
-	          ref = firebase.database().ref();
-	          _context3.next = 10;
-	          return [(0, _effects.call)([ref, ref.update], payload, opts.handler), (0, _effects.take)(opts)];
+	                case 5:
+	                    payload = _context3.sent;
+	                    opts = newOpts('error');
+	                    ref = firebase.database().ref();
+	                    _context3.next = 10;
+	                    return [(0, _effects.call)([ref, ref.update], payload, opts.handler), (0, _effects.take)(opts)];
 
-	        case 10:
-	          _ref = _context3.sent;
-	          _ref2 = _slicedToArray(_ref, 2);
-	          _ = _ref2[0];
-	          error = _ref2[1].error;
-	          return _context3.abrupt('return', error);
+	                case 10:
+	                    _ref = _context3.sent;
+	                    _ref2 = _slicedToArray(_ref, 2);
+	                    _ = _ref2[0];
+	                    error = _ref2[1].error;
+	                    return _context3.abrupt('return', error);
 
-	        case 15:
-	        case 'end':
-	          return _context3.stop();
-	      }
-	    }
-	  }, _marked[2], this);
+	                case 15:
+	                case 'end':
+	                    return _context3.stop();
+	            }
+	        }
+	    }, _marked[2], this);
 	}
 
 	/**
@@ -235,42 +236,42 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * yield call(update, 'posts', '1234', { 'Second Post', 'My seond post details', +new Date });
 	 */
 	function update(path, key, payload) {
-	  var opts, ref, _ref3, _ref4, _, error;
+	    var opts, ref, _ref3, _ref4, _, error;
 
-	  return regeneratorRuntime.wrap(function update$(_context4) {
-	    while (1) {
-	      switch (_context4.prev = _context4.next) {
-	        case 0:
-	          if (!(typeof payload === 'function')) {
-	            _context4.next = 4;
-	            break;
-	          }
+	    return regeneratorRuntime.wrap(function update$(_context4) {
+	        while (1) {
+	            switch (_context4.prev = _context4.next) {
+	                case 0:
+	                    if (!(typeof payload === 'function')) {
+	                        _context4.next = 4;
+	                        break;
+	                    }
 
-	          _context4.next = 3;
-	          return (0, _effects.call)(payload);
+	                    _context4.next = 3;
+	                    return (0, _effects.call)(payload);
 
-	        case 3:
-	          payload = _context4.sent;
+	                case 3:
+	                    payload = _context4.sent;
 
-	        case 4:
-	          opts = newOpts('error');
-	          ref = firebase.database().ref(path + '/' + key);
-	          _context4.next = 8;
-	          return [(0, _effects.call)([ref, ref.update], payload, opts.handler), (0, _effects.take)(opts)];
+	                case 4:
+	                    opts = newOpts('error');
+	                    ref = firebase.database().ref(path + '/' + key);
+	                    _context4.next = 8;
+	                    return [(0, _effects.call)([ref, ref.update], payload, opts.handler), (0, _effects.take)(opts)];
 
-	        case 8:
-	          _ref3 = _context4.sent;
-	          _ref4 = _slicedToArray(_ref3, 2);
-	          _ = _ref4[0];
-	          error = _ref4[1].error;
-	          return _context4.abrupt('return', error);
+	                case 8:
+	                    _ref3 = _context4.sent;
+	                    _ref4 = _slicedToArray(_ref3, 2);
+	                    _ = _ref4[0];
+	                    error = _ref4[1].error;
+	                    return _context4.abrupt('return', error);
 
-	        case 13:
-	        case 'end':
-	          return _context4.stop();
-	      }
-	    }
-	  }, _marked[3], this);
+	                case 13:
+	                case 'end':
+	                    return _context4.stop();
+	            }
+	        }
+	    }, _marked[3], this);
 	}
 
 	/**
@@ -289,40 +290,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *);
 	 */
 	function push(path, fn) {
-	  var key, payload, opts, ref, _ref5, _ref6, _, error;
+	    var key, payload, opts, ref, _ref5, _ref6, _, error;
 
-	  return regeneratorRuntime.wrap(function push$(_context5) {
-	    while (1) {
-	      switch (_context5.prev = _context5.next) {
-	        case 0:
-	          _context5.next = 2;
-	          return (0, _effects.call)(newKey, path);
+	    return regeneratorRuntime.wrap(function push$(_context5) {
+	        while (1) {
+	            switch (_context5.prev = _context5.next) {
+	                case 0:
+	                    _context5.next = 2;
+	                    return (0, _effects.call)(newKey, path);
 
-	        case 2:
-	          key = _context5.sent;
-	          _context5.next = 5;
-	          return (0, _effects.call)(fn, key);
+	                case 2:
+	                    key = _context5.sent;
+	                    _context5.next = 5;
+	                    return (0, _effects.call)(fn, key);
 
-	        case 5:
-	          payload = _context5.sent;
-	          opts = newOpts('error');
-	          ref = firebase.database().ref(path);
-	          _context5.next = 10;
-	          return [(0, _effects.call)([ref, ref.push], payload, opts.handler), (0, _effects.take)(opts)];
+	                case 5:
+	                    payload = _context5.sent;
+	                    opts = newOpts('error');
+	                    ref = firebase.database().ref(path);
+	                    _context5.next = 10;
+	                    return [(0, _effects.call)([ref, ref.push], payload, opts.handler), (0, _effects.take)(opts)];
 
-	        case 10:
-	          _ref5 = _context5.sent;
-	          _ref6 = _slicedToArray(_ref5, 2);
-	          _ = _ref6[0];
-	          error = _ref6[1].error;
-	          return _context5.abrupt('return', error);
+	                case 10:
+	                    _ref5 = _context5.sent;
+	                    _ref6 = _slicedToArray(_ref5, 2);
+	                    _ = _ref6[0];
+	                    error = _ref6[1].error;
+	                    return _context5.abrupt('return', error);
 
-	        case 15:
-	        case 'end':
-	          return _context5.stop();
-	      }
-	    }
-	  }, _marked[4], this);
+	                case 15:
+	                case 'end':
+	                    return _context5.stop();
+	            }
+	        }
+	    }, _marked[4], this);
 	}
 
 	/**
@@ -353,68 +354,68 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * yield call(remove, 'posts', '1234')
 	 */
 	function remove(path, key) {
-	  var opts, ref, _ref7, _ref8, _, error;
+	    var opts, ref, _ref7, _ref8, _, error;
 
-	  return regeneratorRuntime.wrap(function remove$(_context6) {
-	    while (1) {
-	      switch (_context6.prev = _context6.next) {
-	        case 0:
-	          opts = newOpts('error');
-	          ref = firebase.database().ref(path + '/' + key);
-	          _context6.next = 4;
-	          return [(0, _effects.call)([ref, ref.remove], opts.handler), (0, _effects.take)(opts)];
+	    return regeneratorRuntime.wrap(function remove$(_context6) {
+	        while (1) {
+	            switch (_context6.prev = _context6.next) {
+	                case 0:
+	                    opts = newOpts('error');
+	                    ref = firebase.database().ref(path + '/' + key);
+	                    _context6.next = 4;
+	                    return [(0, _effects.call)([ref, ref.remove], opts.handler), (0, _effects.take)(opts)];
 
-	        case 4:
-	          _ref7 = _context6.sent;
-	          _ref8 = _slicedToArray(_ref7, 2);
-	          _ = _ref8[0];
-	          error = _ref8[1].error;
-	          return _context6.abrupt('return', error);
+	                case 4:
+	                    _ref7 = _context6.sent;
+	                    _ref8 = _slicedToArray(_ref7, 2);
+	                    _ = _ref8[0];
+	                    error = _ref8[1].error;
+	                    return _context6.abrupt('return', error);
 
-	        case 9:
-	        case 'end':
-	          return _context6.stop();
-	      }
-	    }
-	  }, _marked[5], this);
+	                case 9:
+	                case 'end':
+	                    return _context6.stop();
+	            }
+	        }
+	    }, _marked[5], this);
 	}
 
 	function runSync(ref, eventType, actionCreator) {
-	  var opts, _ref9, data;
+	    var opts, _ref9, data;
 
-	  return regeneratorRuntime.wrap(function runSync$(_context7) {
-	    while (1) {
-	      switch (_context7.prev = _context7.next) {
-	        case 0:
-	          opts = newOpts();
-	          _context7.next = 3;
-	          return (0, _effects.call)([ref, ref.on], eventType, opts.handler);
+	    return regeneratorRuntime.wrap(function runSync$(_context7) {
+	        while (1) {
+	            switch (_context7.prev = _context7.next) {
+	                case 0:
+	                    opts = newOpts();
+	                    _context7.next = 3;
+	                    return (0, _effects.call)([ref, ref.on], eventType, opts.handler);
 
-	        case 3:
-	          if (false) {
-	            _context7.next = 12;
-	            break;
-	          }
+	                case 3:
+	                    if (false) {
+	                        _context7.next = 12;
+	                        break;
+	                    }
 
-	          _context7.next = 6;
-	          return (0, _effects.take)(opts);
+	                    _context7.next = 6;
+	                    return (0, _effects.take)(opts);
 
-	        case 6:
-	          _ref9 = _context7.sent;
-	          data = _ref9.data;
-	          _context7.next = 10;
-	          return (0, _effects.put)(actionCreator({ key: data.key, value: data.val() }));
+	                case 6:
+	                    _ref9 = _context7.sent;
+	                    data = _ref9.data;
+	                    _context7.next = 10;
+	                    return (0, _effects.put)(actionCreator({ key: data.key, value: data.val() }));
 
-	        case 10:
-	          _context7.next = 3;
-	          break;
+	                case 10:
+	                    _context7.next = 3;
+	                    break;
 
-	        case 12:
-	        case 'end':
-	          return _context7.stop();
-	      }
-	    }
-	  }, _marked[6], this);
+	                case 12:
+	                case 'end':
+	                    return _context7.stop();
+	            }
+	        }
+	    }, _marked[6], this);
 	}
 
 	/**
@@ -434,84 +435,84 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *}
 	 */
 	function sync(path) {
-	  var mapEventToAction = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-	  var limit = arguments.length <= 2 || arguments[2] === undefined ? 20 : arguments[2];
+	    var mapEventToAction = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	    var limit = arguments[2];
 
-	  var ref, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, type, action;
+	    var ref, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, type, action;
 
-	  return regeneratorRuntime.wrap(function sync$(_context8) {
-	    while (1) {
-	      switch (_context8.prev = _context8.next) {
-	        case 0:
-	          ref = firebase.database().ref(path).limitToLast(limit);
-	          _iteratorNormalCompletion = true;
-	          _didIteratorError = false;
-	          _iteratorError = undefined;
-	          _context8.prev = 4;
-	          _iterator = EVENT_TYPES[Symbol.iterator]();
+	    return regeneratorRuntime.wrap(function sync$(_context8) {
+	        while (1) {
+	            switch (_context8.prev = _context8.next) {
+	                case 0:
+	                    ref = typeof limit === 'number' ? firebase.database().ref(path).limitToLast(limit) : firebase.database().ref(path);
+	                    _iteratorNormalCompletion = true;
+	                    _didIteratorError = false;
+	                    _iteratorError = undefined;
+	                    _context8.prev = 4;
+	                    _iterator = EVENT_TYPES[Symbol.iterator]();
 
-	        case 6:
-	          if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-	            _context8.next = 15;
-	            break;
-	          }
+	                case 6:
+	                    if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+	                        _context8.next = 15;
+	                        break;
+	                    }
 
-	          type = _step.value;
-	          action = mapEventToAction[type];
+	                    type = _step.value;
+	                    action = mapEventToAction[type];
 
-	          if (!(typeof action === 'function')) {
-	            _context8.next = 12;
-	            break;
-	          }
+	                    if (!(typeof action === 'function')) {
+	                        _context8.next = 12;
+	                        break;
+	                    }
 
-	          _context8.next = 12;
-	          return (0, _effects.fork)(runSync, ref, type, action);
+	                    _context8.next = 12;
+	                    return (0, _effects.fork)(runSync, ref, type, action);
 
-	        case 12:
-	          _iteratorNormalCompletion = true;
-	          _context8.next = 6;
-	          break;
+	                case 12:
+	                    _iteratorNormalCompletion = true;
+	                    _context8.next = 6;
+	                    break;
 
-	        case 15:
-	          _context8.next = 21;
-	          break;
+	                case 15:
+	                    _context8.next = 21;
+	                    break;
 
-	        case 17:
-	          _context8.prev = 17;
-	          _context8.t0 = _context8['catch'](4);
-	          _didIteratorError = true;
-	          _iteratorError = _context8.t0;
+	                case 17:
+	                    _context8.prev = 17;
+	                    _context8.t0 = _context8['catch'](4);
+	                    _didIteratorError = true;
+	                    _iteratorError = _context8.t0;
 
-	        case 21:
-	          _context8.prev = 21;
-	          _context8.prev = 22;
+	                case 21:
+	                    _context8.prev = 21;
+	                    _context8.prev = 22;
 
-	          if (!_iteratorNormalCompletion && _iterator.return) {
-	            _iterator.return();
-	          }
+	                    if (!_iteratorNormalCompletion && _iterator.return) {
+	                        _iterator.return();
+	                    }
 
-	        case 24:
-	          _context8.prev = 24;
+	                case 24:
+	                    _context8.prev = 24;
 
-	          if (!_didIteratorError) {
-	            _context8.next = 27;
-	            break;
-	          }
+	                    if (!_didIteratorError) {
+	                        _context8.next = 27;
+	                        break;
+	                    }
 
-	          throw _iteratorError;
+	                    throw _iteratorError;
 
-	        case 27:
-	          return _context8.finish(24);
+	                case 27:
+	                    return _context8.finish(24);
 
-	        case 28:
-	          return _context8.finish(21);
+	                case 28:
+	                    return _context8.finish(21);
 
-	        case 29:
-	        case 'end':
-	          return _context8.stop();
-	      }
-	    }
-	  }, _marked[7], this, [[4, 17, 21, 29], [22,, 24, 28]]);
+	                case 29:
+	                case 'end':
+	                    return _context8.stop();
+	            }
+	        }
+	    }, _marked[7], this, [[4, 17, 21, 29], [22,, 24, 28]]);
 	}
 
 /***/ },
@@ -682,11 +683,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	var kThrow = function kThrow(err) {
 	  throw err;
 	};
+	var kReturn = function kReturn(value) {
+	  return { value: value, done: true };
+	};
 	function makeIterator(next) {
 	  var thro = arguments.length <= 1 || arguments[1] === undefined ? kThrow : arguments[1];
 	  var name = arguments.length <= 2 || arguments[2] === undefined ? '' : arguments[2];
 
-	  var iterator = { name: name, next: next, throw: thro };
+	  var iterator = { name: name, next: next, throw: thro, return: kReturn };
 	  if (typeof Symbol !== 'undefined') {
 	    iterator[Symbol.iterator] = function () {
 	      return iterator;
@@ -868,6 +872,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      chan.put(input);
 	    }
 	  });
+
+	  if (!_utils.is.func(unsubscribe)) {
+	    throw new Error('in eventChannel: subscribe should return a function to unsubscribe');
+	  }
 
 	  return {
 	    take: chan.take,
@@ -1156,28 +1164,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var zeroBuffer = { isEmpty: _utils.kTrue, put: _utils.noop, take: _utils.noop };
 
-	/**
-	  TODO: Need to make a more optimized implementation: e.g. Ring buffers, linked lists with Node Object pooling...
-	**/
-	function arrBuffer() {
-	  var limit = arguments.length <= 0 || arguments[0] === undefined ? Infinity : arguments[0];
+	function ringBuffer() {
+	  var limit = arguments.length <= 0 || arguments[0] === undefined ? 10 : arguments[0];
 	  var overflowAction = arguments[1];
 
-	  var arr = [];
+	  var arr = new Array(limit);
+	  var length = 0;
+	  var pushIndex = 0;
+	  var popIndex = 0;
 	  return {
 	    isEmpty: function isEmpty() {
-	      return !arr.length;
+	      return length == 0;
 	    },
 	    put: function put(it) {
-	      if (arr.length < limit) {
-	        arr.push(it);
+	      if (length < limit) {
+	        arr[pushIndex] = it;
+	        pushIndex = (pushIndex + 1) % limit;
+	        length++;
 	      } else {
 	        switch (overflowAction) {
 	          case ON_OVERFLOW_THROW:
 	            throw new Error(BUFFER_OVERFLOW);
 	          case ON_OVERFLOW_SLIDE:
-	            arr.shift();
-	            arr.push(it);
+	            arr[pushIndex] = it;
+	            pushIndex = (pushIndex + 1) % limit;
+	            popIndex = pushIndex;
 	            break;
 	          default:
 	          // DROP
@@ -1185,7 +1196,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    },
 	    take: function take() {
-	      return arr.shift();
+	      if (length != 0) {
+	        var it = arr[popIndex];
+	        arr[popIndex] = null;
+	        length--;
+	        popIndex = (popIndex + 1) % limit;
+	        return it;
+	      }
 	    }
 	  };
 	}
@@ -1195,13 +1212,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return zeroBuffer;
 	  },
 	  fixed: function fixed(limit) {
-	    return arrBuffer(limit, ON_OVERFLOW_THROW);
+	    return ringBuffer(limit, ON_OVERFLOW_THROW);
 	  },
 	  dropping: function dropping(limit) {
-	    return arrBuffer(limit, ON_OVERFLOW_DROP);
+	    return ringBuffer(limit, ON_OVERFLOW_DROP);
 	  },
 	  sliding: function sliding(limit) {
-	    return arrBuffer(limit, ON_OVERFLOW_SLIDE);
+	    return ringBuffer(limit, ON_OVERFLOW_SLIDE);
 	  }
 	};
 
@@ -1210,7 +1227,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	// shim for using process in browser
-
 	var process = module.exports = {};
 
 	// cached from whatever global is present so that test runners that stub it
@@ -1221,22 +1237,84 @@ return /******/ (function(modules) { // webpackBootstrap
 	var cachedSetTimeout;
 	var cachedClearTimeout;
 
+	function defaultSetTimout() {
+	    throw new Error('setTimeout has not been defined');
+	}
+	function defaultClearTimeout () {
+	    throw new Error('clearTimeout has not been defined');
+	}
 	(function () {
-	  try {
-	    cachedSetTimeout = setTimeout;
-	  } catch (e) {
-	    cachedSetTimeout = function () {
-	      throw new Error('setTimeout is not defined');
+	    try {
+	        if (typeof setTimeout === 'function') {
+	            cachedSetTimeout = setTimeout;
+	        } else {
+	            cachedSetTimeout = defaultSetTimout;
+	        }
+	    } catch (e) {
+	        cachedSetTimeout = defaultSetTimout;
 	    }
-	  }
-	  try {
-	    cachedClearTimeout = clearTimeout;
-	  } catch (e) {
-	    cachedClearTimeout = function () {
-	      throw new Error('clearTimeout is not defined');
+	    try {
+	        if (typeof clearTimeout === 'function') {
+	            cachedClearTimeout = clearTimeout;
+	        } else {
+	            cachedClearTimeout = defaultClearTimeout;
+	        }
+	    } catch (e) {
+	        cachedClearTimeout = defaultClearTimeout;
 	    }
-	  }
 	} ())
+	function runTimeout(fun) {
+	    if (cachedSetTimeout === setTimeout) {
+	        //normal enviroments in sane situations
+	        return setTimeout(fun, 0);
+	    }
+	    // if setTimeout wasn't available but was latter defined
+	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+	        cachedSetTimeout = setTimeout;
+	        return setTimeout(fun, 0);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedSetTimeout(fun, 0);
+	    } catch(e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+	            return cachedSetTimeout.call(null, fun, 0);
+	        } catch(e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+	            return cachedSetTimeout.call(this, fun, 0);
+	        }
+	    }
+
+
+	}
+	function runClearTimeout(marker) {
+	    if (cachedClearTimeout === clearTimeout) {
+	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
+	    }
+	    // if clearTimeout wasn't available but was latter defined
+	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+	        cachedClearTimeout = clearTimeout;
+	        return clearTimeout(marker);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedClearTimeout(marker);
+	    } catch (e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+	            return cachedClearTimeout.call(null, marker);
+	        } catch (e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+	            return cachedClearTimeout.call(this, marker);
+	        }
+	    }
+
+
+
+	}
 	var queue = [];
 	var draining = false;
 	var currentQueue;
@@ -1261,7 +1339,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = cachedSetTimeout.call(null, cleanUpNextTick);
+	    var timeout = runTimeout(cleanUpNextTick);
 	    draining = true;
 
 	    var len = queue.length;
@@ -1278,7 +1356,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    cachedClearTimeout.call(null, timeout);
+	    runClearTimeout(timeout);
 	}
 
 	process.nextTick = function (fun) {
@@ -1290,7 +1368,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        cachedSetTimeout.call(null, drainQueue, 0);
+	        runTimeout(drainQueue);
 	    }
 	};
 
@@ -1523,6 +1601,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      completed = false;
 	  addTask(mainTask);
 
+	  function abort(err) {
+	    cancelAll();
+	    cb(err, true);
+	  }
+
 	  function addTask(task) {
 	    tasks.push(task);
 	    task.cont = function (res, isErr) {
@@ -1533,8 +1616,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      (0, _utils.remove)(tasks, task);
 	      task.cont = _utils.noop;
 	      if (isErr) {
-	        cancelAll();
-	        cb(res, true);
+	        abort(res);
 	      } else {
 	        if (task === mainTask) {
 	          result = res;
@@ -1563,6 +1645,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return {
 	    addTask: addTask,
 	    cancelAll: cancelAll,
+	    abort: abort,
 	    getTasks: function getTasks() {
 	      return tasks;
 	    },
@@ -1804,7 +1887,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      ATTENTION! calling cancel must have no effect on an already completed or cancelled effect
 	    **/
 	    var data = void 0;
-	    return(
+	    return (
 	      // Non declarative effect
 	      _utils.is.promise(effect) ? resolvePromise(effect, currCb) : _utils.is.iterator(effect) ? resolveIterator(effect, effectId, name, currCb)
 
@@ -1918,15 +2001,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // we run the function, next we'll check if this is a generator function
 	    // (generator is a function that returns an iterator)
 
-	    // catch synchronous failures; see #152
+	    // catch synchronous failures; see #152 and #441
 	    try {
 	      result = fn.apply(context, args);
 	    } catch (err) {
-	      if (!detached) {
-	        return cb(err);
-	      } else {
-	        error = err;
-	      }
+	      error = err;
 	    }
 
 	    // A generator function: i.e. returns an iterator
@@ -1934,8 +2013,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      _iterator = result;
 	    }
 
-	    // simple effect: wrap in a generator
-	    // do not bubble up synchronous failures for detached forks, instead create a failed task. See #152
+	    // do not bubble up synchronous failures for detached forks
+	    // instead create a failed task. See #152 and #441
 	    else {
 	        _iterator = error ? (0, _utils.makeIterator)(function () {
 	          throw error;
@@ -1958,14 +2037,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    _asap2.default.suspend();
 	    var task = proc(_iterator, subscribe, dispatch, getState, options, effectId, fn.name, detached ? null : _utils.noop);
-	    if (!detached) {
+	    if (detached) {
+	      cb(task);
+	    } else {
 	      if (_iterator._isRunning) {
 	        taskQueue.addTask(task);
+	        cb(task);
 	      } else if (_iterator._error) {
-	        return cb(_iterator._error, true);
+	        taskQueue.abort(_iterator._error);
+	      } else {
+	        cb(task);
 	      }
 	    }
-	    cb(task);
 	    _asap2.default.flush();
 	    // Fork effects are non cancellables
 	  }
