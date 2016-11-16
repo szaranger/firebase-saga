@@ -31,7 +31,7 @@ Following functions are supported:
 
 The saga can be like the following:
 
-```
+```js
 import { takeEvery } from 'redux-saga';
 import { call, put, fork } from 'redux-saga/effects';
 import * as actions from '../actions';
@@ -95,7 +95,7 @@ export default function* root() {
 
 If you are using CDN only, add the URL to the `index.html` file, and specify the **Firebase** config:
 
-```
+```html
 <!doctype html>
 <html lang="en">
 	<head>
@@ -122,7 +122,7 @@ If you are using CDN only, add the URL to the `index.html` file, and specify the
 
 If you are using **Webpack** or **Browserify**, you can install the **firebase** node module and then import it into the root components. 
 
-```
+```js
 import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
