@@ -135,6 +135,9 @@ export function* push(path, fn) {
         call([ref, ref.push], payload, opts.handler),
         take(opts)
     ];
+    if (error === undefined) {
+      return key;
+    }
     return error;
 }
 
