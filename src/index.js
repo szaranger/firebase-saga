@@ -116,6 +116,7 @@ export function* update(path, key, payload) {
  *
  * @param path
  * @param fn
+ * @param getkey
  * @example
  * import { push } from 'firebase-saga';
  *
@@ -126,7 +127,7 @@ export function* update(path, key, payload) {
  *       })
  *);
  */
-export function* push(path, fn) {
+export function* push(path, fn, getKey = false) {
     const key = yield call(newKey, path);
     const payload = yield call(fn, key);
     const opts = newOpts('error');
@@ -135,6 +136,11 @@ export function* push(path, fn) {
         call([ref, ref.push], payload, opts.handler),
         take(opts)
     ];
+
+    if(getKey && error === undefined) {
+      return key;
+    }
+
     return error;
 }
 

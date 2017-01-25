@@ -223,6 +223,7 @@ function update(path, key, payload) {
  *
  * @param path
  * @param fn
+ * @param getkey
  * @example
  * import { push } from 'firebase-saga';
  *
@@ -234,6 +235,8 @@ function update(path, key, payload) {
  *);
  */
 function push(path, fn) {
+    var getKey = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+
     var key, payload, opts, ref, _ref5, _ref6, _, error;
 
     return regeneratorRuntime.wrap(function push$(_context5) {
@@ -260,9 +263,18 @@ function push(path, fn) {
                     _ref6 = _slicedToArray(_ref5, 2);
                     _ = _ref6[0];
                     error = _ref6[1].error;
+
+                    if (!(getKey && error === undefined)) {
+                        _context5.next = 16;
+                        break;
+                    }
+
+                    return _context5.abrupt('return', key);
+
+                case 16:
                     return _context5.abrupt('return', error);
 
-                case 15:
+                case 17:
                 case 'end':
                     return _context5.stop();
             }

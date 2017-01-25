@@ -279,6 +279,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @param path
 	 * @param fn
+	 * @param getkey
 	 * @example
 	 * import { push } from 'firebase-saga';
 	 *
@@ -290,6 +291,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *);
 	 */
 	function push(path, fn) {
+	    var getKey = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+
 	    var key, payload, opts, ref, _ref5, _ref6, _, error;
 
 	    return regeneratorRuntime.wrap(function push$(_context5) {
@@ -316,9 +319,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    _ref6 = _slicedToArray(_ref5, 2);
 	                    _ = _ref6[0];
 	                    error = _ref6[1].error;
+
+	                    if (!(getKey && error === undefined)) {
+	                        _context5.next = 16;
+	                        break;
+	                    }
+
+	                    return _context5.abrupt('return', key);
+
+	                case 16:
 	                    return _context5.abrupt('return', error);
 
-	                case 15:
+	                case 17:
 	                case 'end':
 	                    return _context5.stop();
 	            }
@@ -733,7 +745,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utils = __webpack_require__(1);
 
-	var _buffers = __webpack_require__(4);
+	var _buffers = __webpack_require__(5);
 
 	var CHANNEL_END_TYPE = '@@redux-saga/CHANNEL_END';
 	var END = exports.END = { type: CHANNEL_END_TYPE };
@@ -887,7 +899,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  };
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 /* 3 */
@@ -1145,85 +1157,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.buffers = exports.BUFFER_OVERFLOW = undefined;
-
-	var _utils = __webpack_require__(1);
-
-	var BUFFER_OVERFLOW = exports.BUFFER_OVERFLOW = 'Channel\'s Buffer overflow!';
-
-	var ON_OVERFLOW_THROW = 1;
-	var ON_OVERFLOW_DROP = 2;
-	var ON_OVERFLOW_SLIDE = 3;
-
-	var zeroBuffer = { isEmpty: _utils.kTrue, put: _utils.noop, take: _utils.noop };
-
-	function ringBuffer() {
-	  var limit = arguments.length <= 0 || arguments[0] === undefined ? 10 : arguments[0];
-	  var overflowAction = arguments[1];
-
-	  var arr = new Array(limit);
-	  var length = 0;
-	  var pushIndex = 0;
-	  var popIndex = 0;
-	  return {
-	    isEmpty: function isEmpty() {
-	      return length == 0;
-	    },
-	    put: function put(it) {
-	      if (length < limit) {
-	        arr[pushIndex] = it;
-	        pushIndex = (pushIndex + 1) % limit;
-	        length++;
-	      } else {
-	        switch (overflowAction) {
-	          case ON_OVERFLOW_THROW:
-	            throw new Error(BUFFER_OVERFLOW);
-	          case ON_OVERFLOW_SLIDE:
-	            arr[pushIndex] = it;
-	            pushIndex = (pushIndex + 1) % limit;
-	            popIndex = pushIndex;
-	            break;
-	          default:
-	          // DROP
-	        }
-	      }
-	    },
-	    take: function take() {
-	      if (length != 0) {
-	        var it = arr[popIndex];
-	        arr[popIndex] = null;
-	        length--;
-	        popIndex = (popIndex + 1) % limit;
-	        return it;
-	      }
-	    }
-	  };
-	}
-
-	var buffers = exports.buffers = {
-	  none: function none() {
-	    return zeroBuffer;
-	  },
-	  fixed: function fixed(limit) {
-	    return ringBuffer(limit, ON_OVERFLOW_THROW);
-	  },
-	  dropping: function dropping(limit) {
-	    return ringBuffer(limit, ON_OVERFLOW_DROP);
-	  },
-	  sliding: function sliding(limit) {
-	    return ringBuffer(limit, ON_OVERFLOW_SLIDE);
-	  }
-	};
-
-/***/ },
-/* 5 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -1409,6 +1342,85 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.buffers = exports.BUFFER_OVERFLOW = undefined;
+
+	var _utils = __webpack_require__(1);
+
+	var BUFFER_OVERFLOW = exports.BUFFER_OVERFLOW = 'Channel\'s Buffer overflow!';
+
+	var ON_OVERFLOW_THROW = 1;
+	var ON_OVERFLOW_DROP = 2;
+	var ON_OVERFLOW_SLIDE = 3;
+
+	var zeroBuffer = { isEmpty: _utils.kTrue, put: _utils.noop, take: _utils.noop };
+
+	function ringBuffer() {
+	  var limit = arguments.length <= 0 || arguments[0] === undefined ? 10 : arguments[0];
+	  var overflowAction = arguments[1];
+
+	  var arr = new Array(limit);
+	  var length = 0;
+	  var pushIndex = 0;
+	  var popIndex = 0;
+	  return {
+	    isEmpty: function isEmpty() {
+	      return length == 0;
+	    },
+	    put: function put(it) {
+	      if (length < limit) {
+	        arr[pushIndex] = it;
+	        pushIndex = (pushIndex + 1) % limit;
+	        length++;
+	      } else {
+	        switch (overflowAction) {
+	          case ON_OVERFLOW_THROW:
+	            throw new Error(BUFFER_OVERFLOW);
+	          case ON_OVERFLOW_SLIDE:
+	            arr[pushIndex] = it;
+	            pushIndex = (pushIndex + 1) % limit;
+	            popIndex = pushIndex;
+	            break;
+	          default:
+	          // DROP
+	        }
+	      }
+	    },
+	    take: function take() {
+	      if (length != 0) {
+	        var it = arr[popIndex];
+	        arr[popIndex] = null;
+	        length--;
+	        popIndex = (popIndex + 1) % limit;
+	        return it;
+	      }
+	    }
+	  };
+	}
+
+	var buffers = exports.buffers = {
+	  none: function none() {
+	    return zeroBuffer;
+	  },
+	  fixed: function fixed(limit) {
+	    return ringBuffer(limit, ON_OVERFLOW_THROW);
+	  },
+	  dropping: function dropping(limit) {
+	    return ringBuffer(limit, ON_OVERFLOW_DROP);
+	  },
+	  sliding: function sliding(limit) {
+	    return ringBuffer(limit, ON_OVERFLOW_SLIDE);
+	  }
+	};
+
+/***/ },
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -1527,7 +1539,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _channel = __webpack_require__(2);
 
-	var _buffers = __webpack_require__(4);
+	var _buffers = __webpack_require__(5);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2215,7 +2227,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }), _defineEnumerableProperties(_ref8, _mutatorMap), _ref8;
 	  }
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 /* 8 */
@@ -2264,7 +2276,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 
-	var _buffers = __webpack_require__(4);
+	var _buffers = __webpack_require__(5);
 
 	Object.defineProperty(exports, 'buffers', {
 	  enumerable: true,
@@ -2431,7 +2443,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  return sagaMiddleware;
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 /* 12 */

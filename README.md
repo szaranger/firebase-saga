@@ -22,14 +22,14 @@ Following functions are supported:
 | * create(path: *, fn: *): *                          | Saves new data to the database with set()                      |
 | * get(path: *, key: *): *                            | Fetches a record specified by the key from the database        |
 | * getAll(path: *): *                                 | Fetches entire snapshot of the database                        |
-| * push(path: *, fn: *): *                            | Generates a new child location using a unique key              |
+| * push(path: *, fn: *, getkey: *): *                 | Generates a new child location using a unique key              |
 | * remove(path: *, key: *): *                         | Deletes a given child location using a unique key              |
 | * update(path: *, key: *, payload: *): *             | Updates existing data in the database with update()            |
 | * sync(path: *, mapEventToAction: {}, limit: number) | Gets fired every time a child added, remove, changed, or moved |                                                         |
 
 ### Integrate Firebase with Sagas
 
-The saga can be like the following:
+The saga can be written like the following:
 
 ```js
 import { takeEvery } from 'redux-saga';
@@ -120,7 +120,7 @@ If you are using CDN only, add the URL to the `index.html` file, and specify the
 </html>
 ```
 
-If you are using **Webpack** or **Browserify**, you can install the **firebase** node module and then import it into the root components. 
+If you are using **Webpack** or **Browserify**, you can install the **firebase** node module and then import it into the root components.
 
 ```js
 import 'babel-polyfill';
