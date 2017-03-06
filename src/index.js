@@ -22,7 +22,7 @@ const newOpts = (name = 'data') => {
     return chan;
 };
 
-const newKey = (path) => firebase.database().ref().child(path).push().key;
+export const newKey = (path) => firebase.database().ref().child(path).push().key;
 
 /**
  * Fetches a record specified by the key from the database
