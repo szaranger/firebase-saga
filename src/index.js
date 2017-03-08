@@ -89,26 +89,23 @@ export function* create(path, fn) {
 
 /**
  * Updates existing data in the database with `update()`
+ * Supports multi-path updates
  *
  * @param path
- * @param key
  * @param payload
  * @returns {*}
  * * import { update } from 'firebase-saga';
  *
- * yield call(update, 'posts', '1234', { 'Second Post', 'My seond post details', +new Date });
+ * yield call(update, 'posts/1234', { title: 'Second Post', body: 'My seond post details', timestamp: +new Date });
+ *
+ * yield call(update, null, { 'posts/1234': { title: 'Second Post' }, user_posts: { 1234: true } });
  */
-export function* update(path, key, payload) {
+export function* update(path, payload) {
     if (typeof payload === 'function') {
         payload = yield call(payload);
     }
-    const opts = newOpts('error');
-    const ref = firebase.database().ref(`${path}/${key}`);
-    const [ _, { error } ] = yield [
-        call([ref, ref.update], payload, opts.handler),
-        take(opts)
-    ];
-    return error;
+    const ref = path ? firebase.database().ref(path) : firebase.database().ref();
+    return call([ref, ref.update], payload);
 }
 
 /**
