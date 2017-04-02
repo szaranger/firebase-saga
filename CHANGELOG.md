@@ -1,3 +1,8 @@
+1.2.0 / 2017-04-02
+==================
+
+* Added **updateAll** helper for making bulk updates
+
 1.1.2 / 2017-01-25
 ==================
 

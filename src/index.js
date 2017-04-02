@@ -112,6 +112,36 @@ export function* update(path, key, payload) {
 }
 
 /**
+ * Updates existing data in the database with `update()`
+ *
+ * @param path
+ * @param key
+ * @param payload
+ * @returns {*}
+ * * import { updateAll } from 'firebase-saga';
+ *
+ * const postDate = { title: 'My Second Post',
+ *                   body: 'Second post details',
+ *                   timestamp: +new Date };
+ * const updates = {};
+ * updates['/posts/' + newPostKey] = postData;
+ * updates['/user-posts/' + uid + '/' + newPostKey] = postData;
+ * yield call(updateAll, 'posts', updates);
+ */
+export function* updateAll(path, payload) {
+    if (typeof payload === 'function') {
+        payload = yield call(payload);
+    }
+    const opts = newOpts('error');
+    const ref = firebase.database().ref(path);
+    const [ _, { error } ] = yield [
+        call([ref, ref.update], payload, opts.handler),
+        take(opts)
+    ];
+    return error;
+}
+
+/**
  * Generates a new child location using a unique key
  *
  * @param path

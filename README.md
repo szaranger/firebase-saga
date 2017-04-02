@@ -25,6 +25,7 @@ Following functions are supported:
 | * push(path: *, fn: *, getkey: *): *                 | Generates a new child location using a unique key              |
 | * remove(path: *, key: *): *                         | Deletes a given child location using a unique key              |
 | * update(path: *, key: *, payload: *): *             | Updates existing data in the database with update()            |
+| * updateAll(path: *, payload: *): *             | Bulk updating existing data in the database with updateAll()            |
 | * sync(path: *, mapEventToAction: {}, limit: number) | Gets fired every time a child added, remove, changed, or moved |                                                         |
 
 ### Integrate Firebase with Sagas
